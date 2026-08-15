@@ -1,6 +1,6 @@
 // سرویس‌ورکرِ «زمینِ بازیِ پرامت» — برای کارِ کاملاً آفلاین بعد از اولین بازدید
-const CACHE = 'pp-cache-v1';
-const START = './زمین-بازی-پرامت-نمونه-ریاضی۴.html';
+const CACHE = 'pp-cache-v3';
+const START = './index.html';
 const ASSETS = [
   START,
   './manifest.json',
@@ -10,7 +10,7 @@ const ASSETS = [
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(ASSETS)).catch(() => {})
+    caches.open(CACHE).then((c) => c.addAll(ASSETS))
   );
   self.skipWaiting();
 });

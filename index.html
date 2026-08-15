@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>زمینِ بازیِ پرامت — کارگاه تدریس هوشمند</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#227e5a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="زمینِ بازیِ پرامت">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+  :root{
+    --g900:#1c5f45; --g800:#227e5a; --g600:#2fa06e; --g500:#43c78c; --g100:#e6f6ee; --g50:#f2fbf6;
+    --ink:#1e2b25; --muted:#5c6b63; --line:#cfe7db; --paper:#ffffff;
+    --cC:#2f6fb0; --cR:#8a5cd0; --cA:#227e5a; --cT:#c07a1e; --cE:#b0466a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(160deg,#f2fbf6,#e2f3ea);color:var(--ink);
+       font-family:Vazirmatn,"Segoe UI",Tahoma,sans-serif;line-height:1.8;padding:20px;font-size:16px}
+  body.big{font-size:20px}
+  .wrap{max-width:1040px;margin:0 auto}
+  header{text-align:center;margin-bottom:12px;position:relative}
+  header h1{margin:.1em 0;color:var(--g800);font-size:1.7rem}
+  header p{margin:.15em 0;color:var(--muted)}
+  .topbtns{position:absolute;top:0;left:0;display:flex;gap:6px}
+  .privacy{background:#fff6f0;border:1px solid #f3d5c6;color:#8a3f22;border-radius:12px;
+           padding:9px 14px;font-size:.85rem;text-align:center;margin:10px auto 18px;max-width:760px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:18px;
+        padding:18px 20px;margin-bottom:16px;box-shadow:0 8px 22px rgba(34,126,90,.06)}
+  .controls{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field.full{grid-column:1/-1}
+  label{font-weight:700;color:var(--g800);font-size:.9rem}
+  select,input[type=text]{padding:10px 12px;border:1.5px solid var(--line);border-radius:11px;
+        background:var(--g50);font:inherit;color:var(--ink)}
+  select:focus,input:focus{border-color:var(--g500)}
+  button:focus-visible,select:focus-visible,input:focus-visible,[tabindex="-1"]:focus-visible{
+        outline:3px solid var(--g900);outline-offset:3px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px}
+  .chips .chip{cursor:pointer;background:var(--g100);color:var(--g800);border:1px solid var(--line);
+        border-radius:999px;padding:4px 12px;font-size:.82rem;transition:.15s}
+  .chips .chip:hover{background:var(--g500);color:#fff;border-color:var(--g500)}
+  .chk{display:flex;align-items:center;gap:8px;background:var(--g50);border:1.5px solid var(--line);
+       border-radius:11px;padding:10px 12px}
+  .chk input{width:18px;height:18px;accent-color:var(--g600)}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+  button{cursor:pointer;border:none;border-radius:11px;padding:11px 18px;font:inherit;font-weight:700}
+  .primary{background:var(--g600);color:#fff}.primary:hover{background:var(--g800)}
+  .ghost{background:#fff;color:var(--g800);border:1.5px solid var(--g500)}.ghost:hover{background:var(--g50)}
+  .mini{padding:7px 12px;font-size:.85rem}
+  .out h2{color:var(--g800);font-size:1.1rem;margin:.1em 0 .5em;display:flex;align-items:center;gap:8px}
+  .badge{background:var(--g600);color:#fff;border-radius:999px;padding:2px 12px;font-size:.8rem}
+  .copybar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+  pre{white-space:pre-wrap;background:var(--g50);border:1px dashed var(--line);border-radius:12px;
+      padding:15px;font-family:inherit;font-size:.97rem;margin:0}
+  .crate-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;font-size:.78rem;align-items:center}
+  .crate-legend b{border-radius:7px;padding:2px 9px;color:#fff;font-weight:700;cursor:help}
+  .cC{background:var(--cC)}.cR{background:var(--cR)}.cA{background:var(--cA)}.cT{background:var(--cT)}.cE{background:var(--cE)}
+  #crateInfo{margin-top:10px;background:var(--g50);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.86rem}
+  #crateInfo div{margin:3px 0}
+  .fu{display:flex;flex-wrap:wrap;gap:8px}
+  .fu button{background:#eef4ff;color:#2f6fb0;border:1.5px solid #cfe0f5}
+  .fu button:hover{background:#2f6fb0;color:#fff}
+  .banklist{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+  .bankitem{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--g50);
+            border:1px solid var(--line);border-radius:11px;padding:9px 12px}
+  .bankitem span{font-size:.9rem;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bankitem .acts{display:flex;gap:6px;flex-shrink:0}
+  .bankitem button{padding:5px 10px;font-size:.8rem}
+  .del{background:#fff0ee;color:#c0432a;border:1px solid #f0cabf}.del:hover{background:#c0432a;color:#fff}
+  .hint{color:var(--muted);font-size:.84rem}
+  .note{background:#fff6f0;border:1px solid #f3d5c6;color:#8a3f22;border-radius:12px;padding:11px 14px;font-size:.88rem}
+  .howto .steps div{margin:5px 0;font-size:.92rem}
+  .checklist{margin-top:12px;background:var(--g50);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .checklist b{color:var(--g800)}
+  .checklist label{display:flex;align-items:center;gap:8px;font-weight:400;color:var(--ink);font-size:.9rem;margin-top:5px;cursor:pointer}
+  .checklist input{width:17px;height:17px;accent-color:var(--g600)}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--g900);color:#fff;
+         padding:10px 20px;border-radius:12px;opacity:0;transition:.25s;pointer-events:none;font-weight:700;z-index:9}
+  .toast.show{opacity:1}
+  footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:6px}
+  @media(max-width:720px){.controls{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.controls{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){.toast{transition:none}}
+  @media print{body{background:#fff;padding:0}.card{box-shadow:none;border:1px solid #ccc}
+    .btnrow,.privacy,.chips,footer,.no-print,.fu,.topbtns{display:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🧪 زمینِ بازیِ پرامت</h1>
+    <p>کارگاه تدریس هوشمند در دورهٔ ابتدایی — انتخاب کن، پرامتِ آماده بگیر، در ابزار امتحان کن</p>
+    <p class="hint">کاملاً آفلاین کار می‌کند · انتخاب‌ها و بانکِ پرامتت به‌خاطر سپرده می‌شود</p>
+    <button id="installBtn" class="ghost mini no-print" style="display:none;margin-top:8px" onclick="installApp()">⬇️ نصبِ اپ روی گوشی/کامپیوتر</button>
+  </header>
+  <div class="privacy">🔒 هیچ‌وقت نام، نمره یا اطلاعاتِ خصوصیِ دانش‌آموز را وارد نکن؛ به‌جای نام، ویژگیِ کلی بنویس.</div>
+  <div class="privacy" style="background:#e6f6ee;border-color:#cfe7db;color:#227e5a">🔗 موضوع‌های «ریاضی»، «علوم» و «فارسی» برای پایه‌های ۱ تا ۶ از کتاب‌های درسیِ رسمی استخراج شده‌اند. درس را انتخاب کن و پایه را عوض کن تا فصل‌ها و درس‌های واقعیِ همان کتاب را ببینی.</div>
+
+  <div class="card howto" id="howto" aria-labelledby="howtoTitle">
+    <div class="copybar"><h2 id="howtoTitle">❔ چطور کار می‌کند؟</h2><button class="ghost mini no-print" aria-controls="howto" aria-expanded="true" onclick="toggleHowto()">بستن</button></div>
+    <div class="steps">
+      <div><b>۱) انتخاب کن:</b> پایه، درس، نوعِ کار و موضوع را مشخص کن.</div>
+      <div><b>۲) بساز:</b> دکمهٔ «🛠️ بساز» را بزن تا پرامتِ آمادهٔ CRATE ساخته شود.</div>
+      <div><b>۳) کپی و امتحان کن:</b> پرامت را کپی کن، در ابزارِ هوش مصنوعی بگذار، خروجی را بخوان و برای کلاسِ خودت بومی کن.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="controls">
+      <div class="field">
+        <label for="grade">پایه</label>
+        <select id="grade" onchange="resetTopicAndSuggest()"><option>اول</option><option>دوم</option><option>سوم</option><option selected>چهارم</option><option>پنجم</option><option>ششم</option></select>
+      </div>
+      <div class="field">
+        <label for="subject">درس</label>
+        <select id="subject" onchange="resetTopicAndSuggest()"><option value="ریاضی">ریاضی</option><option value="علوم">علوم</option><option value="فارسی">فارسی</option></select>
+      </div>
+      <div class="field">
+        <label for="task">نوعِ کار</label>
+        <select id="task" onchange="toggleOpts()">
+          <option value="tri">تمرینِ سه‌سطحی</option>
+          <option value="worksheet">کاربرگِ کلاسی</option>
+          <option value="plan">طرحِ درسِ کامل</option>
+          <option value="story">داستانِ بومی</option>
+          <option value="simplify">توضیحِ ساده‌تر</option>
+          <option value="sim">شبیه‌سازِ دانش‌آموزِ گیج</option>
+          <option value="feedback">بازخورد به نوشتهٔ دانش‌آموز</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label for="topic">موضوع / مبحث <span class="hint" id="bandhint"></span></label>
+        <input type="text" id="topic" aria-describedby="bandhint srcNote" placeholder="بنویس یا از پیشنهادهای متناسبِ پایه انتخاب کن">
+        <div class="chips" id="chips"></div>
+        <div class="hint" id="srcNote" style="display:none;margin-top:5px;color:#227e5a;font-weight:600"></div>
+      </div>
+      <div class="field" id="optCount">
+        <label for="count">تعدادِ نمونه</label>
+        <select id="count"><option>۳</option><option selected>۵</option><option>۸</option></select>
+      </div>
+      <div class="field" id="optTone">
+        <label for="tone">لحن</label>
+        <select id="tone"><option value="گرم و کودکانه">گرم و کودکانه</option><option value="ساده و خنثی">ساده و خنثی</option></select>
+      </div>
+      <div class="field full" id="localRow">
+        <div class="chk"><input type="checkbox" id="local" checked><label for="local" style="margin:0;font-weight:600">پیوند با زندگیِ روزمرهٔ منطقه — فقط هرجا به موضوع بخورد</label></div>
+      </div>
+      <div class="field full">
+        <div class="chk"><input type="checkbox" id="fluent"><label for="fluent" style="margin:0;font-weight:600">فارسیِ روان (نیم‌فاصلهٔ درست، «ی/ک» فارسی، جمله‌های کوتاه)</label></div>
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="primary" onclick="buildClick()">🛠️ بساز</button>
+      <button class="ghost mini" onclick="fillExample()">🎲 یک نمونهٔ آماده</button>
+      <button id="crateToggle" class="ghost mini" aria-controls="crateInfo" aria-expanded="false" onclick="toggleCrate()">ℹ️ CRATE چیست؟</button>
+      <button class="ghost mini no-print" aria-controls="howto" aria-expanded="true" onclick="toggleHowto()">❔ راهنما</button>
+      <span class="hint no-print">میان‌بر: Ctrl+Enter</span>
+    </div>
+    <div class="crate-legend">
+      <b class="cC" title="کلاس و شرایطت را بگو: پایه، چندپایه، امکانات">C بافت</b>
+      <b class="cR" title="به هوش مصنوعی بگو در چه نقشی کمکت کند">R نقش</b>
+      <b class="cA" title="دقیقاً بگو چه می‌خواهی بسازد">A کار</b>
+      <b class="cT" title="برای چه کسی و با چه زبانی">T هدف</b>
+      <b class="cE" title="شکلِ خروجی و یک نمونه">E نمونه/قالب</b>
+    </div>
+    <div id="crateInfo" role="region" aria-labelledby="crateToggle" hidden>
+      <div><b class="lbl">C — بافت:</b> کلاس و شرایطت را بگو (پایه، چندپایه بودن، امکانات، بی‌اینترنت).</div>
+      <div><b class="lbl">R — نقش:</b> به AI نقش بده؛ مثلاً «دستیارِ طراحیِ آموزشیِ ابتدایی».</div>
+      <div><b class="lbl">A — کار:</b> دقیقاً چه می‌خواهی؟ (چند تمرین، طرحِ درس، داستان…).</div>
+      <div><b class="lbl">T — هدف/مخاطب:</b> برای کدام پایه و با چه زبانی.</div>
+      <div><b class="lbl">E — نمونه/قالب:</b> شکلِ خروجی را بگو و اگر می‌توانی یک نمونه بده.</div>
+    </div>
+  </div>
+
+  <div class="card out" id="promptCard" tabindex="-1" aria-labelledby="promptHeading">
+    <div class="copybar"><h2 id="promptHeading"><span class="badge">۱</span> پرامتِ آماده</h2>
+      <div><button class="ghost mini" onclick="copyEl('prompt')">📋 کپی</button>
+      <button class="ghost mini" onclick="saveToBank()">💾 ذخیره در بانک</button></div></div>
+    <pre id="prompt">دکمهٔ «بساز» را بزن…</pre>
+  </div>
+
+  <div class="card out no-print">
+    <h2><span class="badge">➰</span> قدمِ بعد: بهینه‌سازیِ خروجی</h2>
+    <p class="hint">اگر خروجی هنوز خوب نبود، یکی از این‌ها را کپی کن و به‌عنوانِ پیامِ بعدی بفرست:</p>
+    <div class="fu" id="followups"></div>
+  </div>
+
+  <div class="card out">
+    <div class="copybar"><h2><span class="badge">۲</span> نمونهٔ ساختارِ خروجی</h2>
+      <div><button class="ghost mini" onclick="copyEl('sample')">📋 کپی</button>
+      <button class="ghost mini no-print" onclick="window.print()">🖨️ چاپ</button></div></div>
+    <p class="hint">این بخش شکلِ پیشنهادیِ خروجی را نشان می‌دهد؛ محتوای نهایی را پس از کپی‌کردن پرامت از ابزار هوش مصنوعی بگیر و بازبینی کن.</p>
+    <pre id="sample">—</pre>
+    <div class="note" style="margin-top:12px">⚠️ داوریِ نهایی با توست: خروجی را بخوان، اصلاح کن، و مطمئن شو با پایه و کلاسِ تو می‌خواند.</div>
+    <div class="checklist no-print">
+      <b>✅ قبل از بردن به کلاس:</b>
+      <label><input type="checkbox"> خروجی را کامل خواندم</label>
+      <label><input type="checkbox"> با پایه و کلاسِ خودم بومی کردم</label>
+      <label><input type="checkbox"> نیم‌فاصله و فارسیِ درست را چک کردم</label>
+      <label><input type="checkbox"> می‌دانم تصمیمِ نهایی با من است</label>
+    </div>
+  </div>
+
+  <div class="card no-print">
+    <div class="copybar"><h2><span class="badge">🏦</span> بانکِ پرامتِ من (<span id="bankCount">۰</span>)</h2>
+      <div><button class="ghost mini" onclick="exportBank()">⬇️ دانلودِ بانک</button>
+      <button class="ghost mini del" onclick="clearBank()">🗑️ خالی‌کردن</button></div></div>
+    <div class="banklist" id="banklist"></div>
+    <p class="hint" id="bankEmpty">هنوز چیزی ذخیره نکرده‌ای. پرامتِ خوبت را با «💾 ذخیره در بانک» نگه دار.</p>
+  </div>
+
+  <footer>ساختهٔ کارگاه تدریس هوشمند در دورهٔ ابتدایی · قالبِ CRATE</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+const TOPICS={
+ "ریاضی":{b1:["شمارش و عدد","جمع و تفریقِ ساده","شکل‌های هندسی","الگوها","مقایسهٔ اعداد"],
+   b2:["ضرب و تقسیم","کسرهای ساده","اندازه‌گیری","محیط و مساحت","جدول و نمودار"],
+   b3:["عددهای اعشاری","کسرها","درصد","نسبت و تناسب","حجم و مساحت"]},
+ "علوم":{b1:["حواسِ پنج‌گانه","گیاهان و جانوران","آب و هوا","سالم زندگی‌کردن"],
+   b2:["گیاهان","مادّه و حالت‌های آن","نور و صدا","خاک و سنگ","بدنِ انسان"],
+   b3:["تغییرات مواد","دستگاه‌های بدن","انرژی و حرکت","زمین و آسمان","ماشین‌ها و ابزار"]},
+ "فارسی":{b1:["نشانه‌ها و صداها","جمله‌سازی","کلمه‌های هم‌خانواده","املا"],
+   b2:["درک مطلب","نگارش و انشا","مترادف و متضاد","نشانه‌گذاری"],
+   b3:["انشا و بندنویسی","درک مطلبِ پیشرفته","شعر و آرایه","خلاصه‌نویسی"]}
+};
+// موضوع‌های واقعیِ کتاب‌های ریاضیِ دبستان (کدهای ۲۰۵ تا ۶۰۵) — گروه‌بندی بر اساسِ فصل
+const REAL_MATH={
+ "اول":[["ریاضیِ اولِ دبستان",["شمارش و عدد تا ۵","عددهای تا ۹","عددهای تا ۲۰","شمارش تا ۱۰۰","جمع","تفریق","دهگان و یکان","شکل‌های هندسی","الگوها","دسته‌بندی و مقایسه","اندازه و مقایسهٔ طول","زمان و ترتیب"]]],
+ "دوم":[["ریاضیِ دومِ دبستان",["عدد و رقم","جمع و تفریقِ دو رقمی","اشکالِ هندسی","عددهای سه رقمی","اندازه‌گیری","جمع و تفریقِ سه رقمی","کسر و احتمال","آمار و نمودار"]]],
+ "سوم":[
+  ["فصل ۱ · الگوها",["الگویابی","ماشینِ ورودی-خروجی","ساعت در بعدازظهر"]],
+  ["فصل ۲ · عددهای چهار رقمی",["ارزشِ مکانی","ارزشِ پول","تقریبِ اعداد"]],
+  ["فصل ۳ · عددهای کسری",["شناختِ کسر","تساویِ کسرها","مقایسهٔ کسرها"]],
+  ["فصل ۴ · ضرب و تقسیم",["ضرب","ضربِ یک‌رقمی","خاصیت‌های ضرب","تقسیم"]],
+  ["فصل ۵ · محیط و مساحت",["محیط","اندازهٔ سطح (مساحت)"]],
+  ["فصل ۶ · جمع و تفریق",["جمع و تفریق","جمع در جدولِ ارزشِ مکانی","تفریق در جدولِ ارزشِ مکانی"]],
+  ["فصل ۷ · آمار و احتمال",["جدولِ داده‌ها","نمودارِ دایره‌ای","انتخابِ نمودار"]],
+  ["فصل ۸ · ضرب عددها",["ضرب در ۱۰","ضربِ یک‌رقمی در چندرقمی","تقسیم با باقی‌مانده"]]],
+ "چهارم":[
+  ["فصل ۱ · اعداد و الگوها",["عددنویسی","الگوها","ماشین ورودی-خروجی","معرفی میلیون"]],
+  ["فصل ۲ · کسر",["شناخت کسرها","جمع و تفریق کسر","تساوی کسرها","ضرب عدد در کسر"]],
+  ["فصل ۳ · ضرب و تقسیم",["ضرب دو عدد دورقمی","محاسبه‌های تقریبی","تقسیم و بخش‌پذیری","تقسیم بر عددهای دورقمی"]],
+  ["فصل ۴ · اندازه‌گیری",["زاویه","اندازه‌گیری زاویه","اندازه‌گیری زمان","اندازه‌گیری طول"]],
+  ["فصل ۵ · عدد مخلوط و اعشاری",["عدد مخلوط","عدد اعشاری","جمع و تفریق اعشاری","ارزش مکانی اعشاری"]],
+  ["فصل ۶ · شکل‌های هندسی",["عمود و موازی","چهارضلعی‌ها","مساحت متوازی‌الاضلاع و مثلث","محیط و مساحت"]],
+  ["فصل ۷ · آمار و احتمال",["نمودار خط شکسته","احتمال"]]],
+ "پنجم":[
+  ["فصل ۱ · عددنویسی و الگوها",["عددنویسی و محاسبات","جمع و تفریقِ عددهای مرکب","الگوها"]],
+  ["فصل ۲ · کسر",["جمع و تفریقِ عددهای مخلوط","ضربِ کسرها","تقسیمِ کسرها","ضربِ عددهای مخلوط"]],
+  ["فصل ۳ · نسبت، تناسب و درصد",["نسبت","نسبت‌های مساوی","تناسب","درصد"]],
+  ["فصل ۴ · تقارن و چندضلعی‌ها",["تقارنِ محوری","تقارنِ مرکزی","زاویه و نیم‌ساز","چندضلعی‌ها و زاویه‌ها"]],
+  ["فصل ۵ · عددهای اعشاری",["عددهای اعشاری","جمعِ اعشاری","تفریقِ اعشاری","ضربِ اعشاری"]],
+  ["فصل ۶ · اندازه‌گیری",["مساحتِ لوزی و ذوزنقه","محیطِ دایره","حجم"]],
+  ["فصل ۷ · آمار و احتمال",["جمع‌آوری و نمایشِ داده‌ها","میانگین","احتمال"]]],
+ "ششم":[
+  ["فصل ۱ · عدد و الگوهای عددی",["الگوهای عددی","یادآوریِ عددنویسی"]],
+  ["فصل ۲ · کسر",["جمع و تفریقِ کسرها","ضربِ کسرها","تقسیمِ کسرها","محاسبات با کسر"]],
+  ["فصل ۳ · اعداد اعشاری",["ضرب و تقسیمِ اعشاری","تقسیمِ اعشاری بر عددِ طبیعی","تقسیم بر عددِ اعشاری"]],
+  ["فصل ۴ · تقارن و مختصات",["تقارنِ مرکزی","محورهای مختصات","تقارن و مختصات"]],
+  ["فصل ۵ · اندازه‌گیری",["مساحتِ دایره","حجم و جرم"]],
+  ["فصل ۶ · تناسب و درصد",["نسبت و تناسب","درصد","درصد در محاسباتِ مالی","درصد در آمار و احتمال"]],
+  ["فصل ۷ · تقریب",["اندازه‌گیری و محاسباتِ تقریبی"]]]
+};
+const MATHCODE={"اول":"۱۰۵","دوم":"۲۰۵","سوم":"۳۰۵","چهارم":"۴۰۵","پنجم":"۵۰۵","ششم":"۶۰۵"};
+// موضوع‌های واقعیِ کتاب‌های علومِ دبستان (کدهای ۱۰۶ تا ۶۰۶)
+const REAL_SCIENCE={
+ "اول":[["علومِ اولِ دبستان",["زنگ علوم","سلام، به من نگاه کن (حواس)","سالم باش، شاداب باش","دنیای جانوران","دنیای گیاهان","زمین، خانه‌ی پرآب ما","زمین، خانه‌ی سنگی ما","چه می‌خواهم بسازم؟","زمین، خانه‌ی خاکی ما","دنیای اطراف ما","دنیای سرد و گرم","از خانه تا مدرسه","آهنربای من","از گذشته تا آینده"]]],
+ "دوم":[["علومِ دومِ دبستان",["زنگ علوم (گردش در باغ)","هوای سالم، آب سالم","زندگی ما و گردش زمین (۱)","زندگی ما و گردش زمین (۲)","پیامِ رمز را پیدا کن (۱)","پیامِ رمز را پیدا کن (۲)","اگر تمام شود..","بسازیم و لذت ببریم","کاشتنِ دانه","درونِ آشیانه‌ها","من رشد می‌کنم","برای جشن آماده می‌شویم","بعد از جشن","از گذشته تا آینده"]]],
+ "سوم":[["علومِ سومِ دبستان",["زنگ علوم","خوراکی‌ها","اندازه‌گیریِ مواد","موادّ اطرافِ ما","آب، مادّه‌ی باارزش","زندگیِ ما و آب","نور و مشاهده‌ی اجسام","جست‌وجو کنیم و بسازیم","نیرو، همه‌جا (۱)","نیرو، همه‌جا (۲)","بکارید و ببینید","هر کدام جایِ خود (۱)","هر کدام جایِ خود (۲)","از گذشته تا آینده"]]],
+ "چهارم":[["علومِ چهارمِ دبستان",["زنگ علوم","مخلوط‌ها در زندگی","انرژی، نیازِ هر روزِ ما","انرژیِ الکتریکی","گرما و مادّه","سنگ‌ها","آهنربا در زندگی","آسمان در شب","بدنِ ما (۱)","بدنِ ما (۲)","بی‌مهره‌ها","گوناگونیِ گیاهان","زیستگاه"]]],
+ "پنجم":[["علومِ پنجمِ دبستان",["زنگ علوم","مادّه تغییر می‌کند","رنگین‌کمان","برگی از تاریخِ زمین","حرکتِ بدن","چه خبر؟ (۱)","چه خبر؟ (۲)","کارها آسان می‌شود (۱)","کارها آسان می‌شود (۲)","خاکِ باارزش","بکارید و بخورید","از ریشه تا برگ"]]],
+ "ششم":[["علومِ ششمِ دبستان",["زنگ علوم","سرگذشتِ دفترِ من","کارخانه‌ی کاغذسازی","سفر به اعماقِ زمین","زمینِ پویا","ورزش و نیرو (۱)","ورزش و نیرو (۲)","طراحی کنیم و بسازیم","سفرِ انرژی","خیلی کوچک، خیلی بزرگ","شگفتی‌های برگ","جنگل برای کیست؟","سالم بمانیم","از گذشته تا آینده"]]]
+};
+const SCICODE={"اول":"۱۰۶","دوم":"۲۰۶","سوم":"۳۰۶","چهارم":"۴۰۶","پنجم":"۵۰۶","ششم":"۶۰۶"};
+// موضوع‌های واقعیِ کتاب‌های فارسیِ دبستان (کدهای ۱۰۳ تا ۶۰۳)
+const REAL_PERSIAN={
+ "اول":[["فارسیِ اولِ دبستان (حروف و روان‌خوانی)",["آ ا / ب ب","اَ / د","م م / س س","او و / ت ت","ر / ن","ای ی / ز","اِ / ه‍ / ش ش","ی / اُ","ک ک / و","پ پ / گ گ","ف ف / خ خ","ق / ل ل","ج ج","ه‍ / چ چ","ژ / خوا","تشدید","ص ص / ذ","ع ع / ث","ح","ض ض / ط","غ غ","ظ"]]],
+ "دوم":[
+  ["فصل ۱ · نهادها",["کتاب‌خانه‌ی کلاسِ ما","مسجدِ محله‌ی ما"]],
+  ["فصل ۲ · بهداشت",["خرسِ کوچولو","مدرسه‌ی خرگوش‌ها"]],
+  ["فصل ۳ · اخلاقِ فردی و اجتماعی",["چوپانِ درست‌کار","کوشا و نوشا","دوستانِ ما"]],
+  ["فصل ۴ · راهِ زندگی",["از همه مهربان‌تر","زیارت"]],
+  ["فصل ۵ · هنر و ادب",["هنرمند","فردوسی"]],
+  ["فصل ۶ · ایرانِ من",["ایرانِ زیبا","پرچم","نوروز"]],
+  ["فصل ۷ · طبیعت",["پرواز قطره","مثلِ دانشمندان"]]],
+ "سوم":[
+  ["فصل ۱ · نهادها",["محله‌ی ما","زنگِ ورزش"]],
+  ["فصل ۲ · بهداشت",["آسمانِ آبی، طبیعتِ پاک","آوازِ گنجشک"]],
+  ["فصل ۳ · اخلاقِ فردی–اجتماعی",["بلدرچین و برزگر","فداکاران","کارِ نیک"]],
+  ["فصل ۴ · راهِ زندگی",["پیراهنِ بهشتی","بویِ نرگس"]],
+  ["فصل ۵ · هنر و ادب",["یارِ مهربان","نویسنده‌ی بزرگ"]],
+  ["فصل ۶ · ایرانِ من",["ایرانِ عزیز","ایران‌آباد"]],
+  ["فصل ۷ · طبیعت",["دریا","اگر جنگل نباشد","چشم‌های آسمان"]]],
+ "چهارم":[
+  ["فصل ۱ · آفرینش",["آفریدگارِ زیبایی","کوچِ پرستوها"]],
+  ["فصل ۲ · دانایی و هوشیاری",["رازِ نشانه‌ها","ارزشِ علم","رهایی از قفس"]],
+  ["فصل ۳ · ایرانِ من",["آرشِ کمان‌گیر","مهمانِ شهرِ ما"]],
+  ["فصل ۴ · فرهنگِ بومی",["درسِ آزاد (فرهنگِ بومی)"]],
+  ["فصل ۵ · نام‌آوران",["باغچه‌ی اطفال","فرمانده‌ی دل‌ها","اتفاقِ ساده"]],
+  ["فصل ۶ · راهِ زندگی",["لطفِ حق","ادب از که آموختی؟","شیر و موش"]],
+  ["فصل ۷ · علم و عمل",["پرسشگری","مدرسه‌ی هوشمند"]]],
+ "پنجم":[
+  ["فصل ۱ · آفرینش",["تماشاخانه","فضلِ خدا"]],
+  ["فصل ۲ · دانایی و هوشیاری",["رازی و ساختِ بیمارستان","بازرگان و پسران","چنار و کدوبُن"]],
+  ["فصل ۳ · ایرانِ من",["سرودِ ملی","دفاع از میهن"]],
+  ["فصل ۴ · نام‌آوران",["نام‌آوران؛ دیروز، امروز، فردا","نامِ نیکو","نقشِ خردمندان"]],
+  ["فصل ۵ · راهِ زندگی",["روزی که باران می‌بارید","شجاعت","کاجستان"]],
+  ["فصل ۶ · علم و عمل",["وقتی بوعلی کودک بود","کار و تلاش"]]],
+ "ششم":[
+  ["فصل ۱ · آفرینش",["معرفتِ آفریدگار","پنجره‌های شناخت"]],
+  ["فصل ۲ · دانایی و هوشیاری",["هوشیاری","داستانِ من و شما","هفت‌خانِ رستم"]],
+  ["فصل ۳ · ایرانِ من",["ای وطن","دریاقلی"]],
+  ["فصل ۴ · نام‌آوران",["رنج‌هایی کشیده‌ام که مپرس","عطار و جلال‌الدینِ محمد","شهدا خورشیدند"]],
+  ["فصل ۵ · راهِ زندگی",["دوستی و مشاوره","رازِ زندگی"]],
+  ["فصل ۶ · علم و عمل",["میوه‌ی هنر","آدابِ مطالعه","ستاره‌ی روشن"]]]
+};
+const PERCODE={"اول":"۱۰۳","دوم":"۲۰۳","سوم":"۳۰۳","چهارم":"۴۰۳","پنجم":"۵۰۳","ششم":"۶۰۳"};
+const BANDNAME={b1:"(اول–دوم)",b2:"(سوم–چهارم)",b3:"(پنجم–ششم)"};
+function band(g){return (g==='اول'||g==='دوم')?'b1':((g==='سوم'||g==='چهارم')?'b2':'b3');}
+const NO_LOCAL=/بدن|دستگاه|حواس|زمین و آسمان|انرژی|نور و صدا|آرایه|نشانه‌گذاری|املا/;
+const localTasks=["tri","worksheet","plan","story"];
+
+const A={
+  tri:{a:(t,n)=>`${n} تمرین در سه دستهٔ ساده، متوسط و چالشی دربارهٔ «${t}» بساز.`,e:"هر سوال یک خط، در پایان پاسخ‌نامهٔ کوتاه.",opt:["optCount"]},
+  worksheet:{a:(t,n)=>`یک کاربرگِ کلاسی دربارهٔ «${t}» با ${n} سوالِ متنوع بساز (جای خالی، چهارگزینه‌ای، و یک سوالِ تشریحی).`,e:"با عنوان، شماره‌گذاری و کادرِ نام؛ آمادهٔ چاپ.",opt:["optCount"]},
+  plan:{a:t=>`یک طرحِ درسِ ۴۵دقیقه‌ای دربارهٔ «${t}» بنویس: هدفِ رفتاری، مقدمهٔ انگیزشی، فعالیتِ عملی با وسایلِ ساده، جمع‌بندی، و ارزیابیِ کوتاه.`,e:"برای هر بخش زمان بگذار؛ بخش‌بندی‌شده و آمادهٔ چاپ.",opt:[]},
+  story:{a:t=>`یک داستانِ کوتاهِ آموزشی دربارهٔ «${t}» بنویس که مفهوم را در دلِ ماجرا جا بدهد.`,e:"۱۵۰ تا ۲۰۰ کلمه، با ۲ پرسشِ فهم در پایان.",opt:["optTone"]},
+  simplify:{a:t=>`مفهومِ «${t}» را با زبانی ساده‌تر و یک تشبیهِ روزمره برای بچه‌ها توضیح بده.`,e:"کوتاه و دو پاراگراف؛ از کلمه‌های سخت پرهیز کن.",opt:["optTone"]},
+  sim:{a:t=>`نقشِ دانش‌آموزی را بازی کن که توضیحِ من دربارهٔ «${t}» را کامل نفهمیده و ۳ سوال بپرس تا نقاطِ مبهم را پیدا کنم.`,e:"فقط سوال‌ها را از زبانِ خودِ بچه بنویس.",opt:[]},
+  feedback:{a:t=>`این نوشتهٔ کوتاهِ دانش‌آموز دربارهٔ «${t}» را بخوان [نوشته را اینجا بگذار] و یک بازخوردِ محترمانه بده: دو نکتهٔ خوب و دو پیشنهادِ بهبود.`,e:"با لحنِ تشویقی و در حدِ فهمِ بچه؛ بدونِ نمره‌دادن.",opt:[]}
+};
+const FOLLOWUPS=[
+ ["روان‌ترش کن","این را روان‌تر و ساده‌تر بازنویسی کن؛ جمله‌ها کوتاه‌تر و کلمه‌های سخت را با معادلِ ساده عوض کن."],
+ ["سه‌سطحی‌اش کن","همین را در سه سطحِ ساده، متوسط و چالشی بده و مطمئن شو دستهٔ چالشی واقعاً سخت‌تر است."],
+ ["بی‌ابزار بازطراحی","این را برای یک کلاسِ بدونِ ابزار و بدونِ اینترنت و در ۳۰ دقیقه بازطراحی کن."],
+ ["کوتاه‌ترش کن","این را کوتاه‌تر کن و فقط مهم‌ترین بخش‌ها را نگه دار."],
+ ["مثالِ بومی اضافه کن","چند مثال از زندگیِ روزمرهٔ بچه‌های همین منطقه به آن اضافه کن، هرجا که به موضوع می‌خورد."],
+ ["پاسخ‌نامه بده","برای همهٔ سوال‌ها یک پاسخ‌نامهٔ کوتاه و درست اضافه کن."]
+];
+
+const REAL_BOOKS={"ریاضی":{data:REAL_MATH,code:MATHCODE},"علوم":{data:REAL_SCIENCE,code:SCICODE},"فارسی":{data:REAL_PERSIAN,code:PERCODE}};
+function suggestTopics(){
+  const s=val('subject'), g=val('grade'), b=band(g), box=document.getElementById('chips'), note=document.getElementById('srcNote'); box.innerHTML='';
+  const rb=REAL_BOOKS[s];
+  if(rb && rb.data[g]){
+    document.getElementById('bandhint').textContent="— برگرفته از کتابِ "+s+"ِ "+g+"ِ دبستان (کد "+rb.code[g]+")";
+    note.style.display='block';
+    note.textContent=(g==='اول')?("🔗 برگرفته از "+(s==='فارسی'?"درس‌هایِ حروف و روان‌خوانیِ":"مفاهیمِ")+" کتابِ "+s+"ِ اول"+(s==='ریاضی'?" (فعالیت‌محور).":".")):"🔗 موضوع‌ها دقیقاً از فصل‌ها و درس‌های کتابِ رسمی گرفته شده‌اند.";
+    rb.data[g].forEach(([fasl,lessons])=>{
+      const h=document.createElement('div'); h.style.cssText='width:100%;font-weight:700;color:#5c6b63;font-size:.78rem;margin-top:7px'; h.textContent=fasl; box.appendChild(h);
+      lessons.forEach(t=>{const c=document.createElement('button');c.type='button';c.className='chip';c.textContent=t;c.setAttribute('aria-label','انتخاب موضوع '+t);
+        c.onclick=()=>{document.getElementById('topic').value=t;buildClick();};box.appendChild(c);});
+    });
+    return;
+  }
+  note.style.display='none';
+  document.getElementById('bandhint').textContent="— متناسبِ پایه "+BANDNAME[b];
+  ((TOPICS[s]&&TOPICS[s][b])||[]).forEach(t=>{const c=document.createElement('button');c.type='button';c.className='chip';c.textContent=t;c.setAttribute('aria-label','انتخاب موضوع '+t);
+    c.onclick=()=>{document.getElementById('topic').value=t;buildClick();};box.appendChild(c);});
+}
+function toggleOpts(){
+  const opt=A[val('task')].opt||[];
+  document.getElementById('optCount').style.display=opt.includes('optCount')?'flex':'none';
+  document.getElementById('optTone').style.display=opt.includes('optTone')?'flex':'none';
+  document.getElementById('localRow').style.display=localTasks.includes(val('task'))?'flex':'none';
+}
+function setExpandedState(targetId,expanded){document.querySelectorAll(`[aria-controls="${targetId}"]`).forEach(b=>b.setAttribute('aria-expanded',String(expanded)));}
+function prefersReducedMotion(){return window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}
+function toggleCrate(){const el=document.getElementById('crateInfo'),opening=el.hidden;el.hidden=!opening;setExpandedState('crateInfo',opening);}
+function toggleHowto(){const el=document.getElementById('howto'),opening=el.hidden;el.hidden=!opening;setExpandedState('howto',opening);try{localStorage.setItem('pp_howto',opening?'1':'0')}catch(e){}
+  if(opening) el.scrollIntoView({behavior:prefersReducedMotion()?'auto':'smooth',block:'start'});}
+function initHowto(){let visible=true;try{visible=localStorage.getItem('pp_howto')!=='0';}catch(e){}const el=document.getElementById('howto');el.hidden=!visible;setExpandedState('howto',visible);}
+function resetTopicAndSuggest(){document.getElementById('topic').value='';suggestTopics();}
+function scrollToPrompt(){const card=document.getElementById('promptCard');card.focus({preventScroll:true});card.scrollIntoView({behavior:prefersReducedMotion()?'auto':'smooth',block:'start'});}
+function buildClick(){if(build()){toast('ساخته شد ✓');scrollToPrompt();}}
+
+function build(){
+  const topicInput=document.getElementById('topic');
+  const topic=topicInput.value.trim();
+  if(!topic){
+    toast('اول موضوع را بنویس یا انتخاب کن');
+    topicInput.focus();
+    return false;
+  }
+  save();
+  const g=val('grade'),s=val('subject'),tk=val('task'),
+        wantLocal=document.getElementById('local').checked,
+        fluent=document.getElementById('fluent').checked,
+        n=val('count'),tone=val('tone'),a=A[tk];
+  const multi=tk==='tri'||tk==='worksheet';
+  const localOK = wantLocal && localTasks.includes(tk) && !NO_LOCAL.test(topic);
+  const localLine = localOK ? " هرجا با موضوع جور بود، از مثال‌های زندگیِ روزمرهٔ بچه‌های منطقه (بازار، طبیعت و نخل، خرید و اندازه‌گیری) استفاده کن؛ اگر موضوع اجازه نداد، اجباری نیست." : "";
+  const toneLine = a.opt.includes('optTone')?` لحن ${tone} باشد.`:"";
+  const fluentLine = fluent ? "\n«فارسی»: خروجی را به فارسیِ روان و درست بده — نیم‌فاصلهٔ درست («می‌شود» نه «می شود»)، «ی» و «ک» فارسی، و جمله‌های کوتاه." : "";
+  const prompt=
+`«C» بافت: من معلمِ پایهٔ ${g}ِ ابتدایی در ایرانشهرم و می‌خواهم برای درسِ ${s} آماده شوم.
+«R» نقش: تو یک دستیارِ باتجربهٔ طراحیِ آموزشی برای دورهٔ ابتدایی هستی.
+«A» کار: ${a.a(topic, multi?n:'')}
+«T» هدف/مخاطب: برای دانش‌آموزانِ پایهٔ ${g}؛ زبان ساده و متناسبِ سن.${toneLine}
+«E» نمونه/قالب: ${a.e}${localLine}${fluentLine}
+در پایان، خروجی را بازخوانی‌پذیر و آمادهٔ استفاده در کلاس بده.`;
+  document.getElementById('prompt').textContent=prompt;
+  document.getElementById('sample').textContent=sampleOf(tk,s,topic,g,n);
+  return true;
+}
+
+function sampleOf(tk,s,T0,g,n){
+  const T=(T0&&T0!=='(موضوع را بنویس)')?T0:'موضوعِ درس';
+  if(tk==='tri')       return leveledSample(s,T,g,n);
+  if(tk==='worksheet') return worksheetSample(s,T,g,n);
+  if(tk==='plan')     return planSample(s,T,g);
+  if(tk==='story')    return storySample(T);
+  if(tk==='simplify') return `توضیحِ ساده‌تر «${T}»:\n\nتصور کن ذهن مثلِ یک میزِ کارِ کوچک است؛ فقط چند چیز رویش جا می‌شود. پس «${T}» را قدم‌به‌قدم و با یک مثالِ آشنا پیش می‌بریم تا راحت جا بگیرد.\n\nبعد همان مفهوم را به چیزی که بچه هر روز می‌بیند وصل می‌کنیم؛ این‌طور در ذهنش می‌ماند.`;
+  if(tk==='sim')      return `(دانش‌آموز، پایهٔ ${g}) دربارهٔ «${T}»:\n۱) آقا/خانم، این یعنی همیشه همین‌طور می‌شود یا فقط بعضی وقت‌ها؟\n۲) نفهمیدم این با چیزی که هفتهٔ پیش گفتید چه فرقی دارد؟\n۳) می‌شود یک مثال از زندگیِ خودمان بزنید تا بهتر بفهمم؟\n\nهر سوال یک نقطهٔ مبهم را نشان می‌دهد.`;
+  if(tk==='feedback') return `بازخورد (نمونه) دربارهٔ نوشتهٔ «${T}»:\n\n✅ نقاطِ خوب:\n• شروعِ خوبی داشتی و موضوع روشن بود.\n• از یک مثالِ واقعی استفاده کردی.\n✏️ برای بهترشدن:\n• جمله‌های بلند را کوتاه‌تر کن.\n• یک جملهٔ پایانی برای جمع‌بندی اضافه کن.\n\nآفرین که تلاش کردی؛ با این دو تغییر نوشته‌ات بهتر می‌شود.`;
+  return "—";
+}
+function faNumberToInt(value){
+  const latin=String(value).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+  return Number.parseInt(latin,10)||5;
+}
+function leveledSample(s,T,g,nValue){
+  const n=faNumberToInt(nValue);
+  const simple=Math.round(n*.4), medium=Math.round(n*.4), challenge=n-simple-medium;
+  const ideas={
+    simple:[`مفهومِ «${T}» را با یک مثالِ ساده نشان بده.`,`یک پرسشِ پایه‌ای برای سنجشِ شناختِ «${T}» بنویس.`,`یک نمونهٔ درست و یک نمونهٔ نادرست از «${T}» مشخص کن.`],
+    medium:[`«${T}» را در یک موقعیتِ آشنا به‌کار ببر.`,`دو نمونهٔ مرتبط با «${T}» را مقایسه یا دسته‌بندی کن.`,`دلیلِ یک پاسخ یا رخدادِ مرتبط با «${T}» را توضیح بده.`],
+    challenge:[`یک مسئلهٔ چندمرحله‌ای دربارهٔ «${T}» حل کن و راه‌حل را توضیح بده.`,`برای یک موقعیتِ تازه دربارهٔ «${T}» راه‌حل طراحی کن.`]
+  };
+  let index=1;
+  const block=(title,count,list)=>`■ ${title}\n${list.slice(0,count).map(text=>`${toFa(index++)}) ${text}`).join('\n')}`;
+  return `ساختارِ تمرین — ${T} (${s}، پایهٔ ${g}) · ${toFa(n)} پرسش\n\n${block('ساده',simple,ideas.simple)}\n\n${block('متوسط',medium,ideas.medium)}\n\n${block('چالشی',challenge,ideas.challenge)}\n\nپاسخ‌نامهٔ کوتاه و بررسی‌شده در پایان قرار می‌گیرد.`;
+}
+function worksheetSample(s,T,g,nValue){
+  const n=faNumberToInt(nValue);
+  const types=['جای‌خالی','درست/نادرست','چهارگزینه‌ای','پاسخِ کوتاه','کاربردی','تشریحی','وصل‌کردنی','خلاقانه'];
+  const questions=types.slice(0,n).map((type,i)=>`${toFa(i+1)}) [${type}] یک پرسشِ متناسب با پایهٔ ${g} دربارهٔ «${T}».`).join('\n\n');
+  return `کاربرگِ کلاسی — ${T}\nدرس: ${s} · پایهٔ ${g}\nنام و نام خانوادگی: ........................    تاریخ: ..............\n\n${questions}\n\nپاسخ‌نامهٔ کوتاه برای معلم در انتهای برگه قرار می‌گیرد.`;
+}
+function triSample(s,T,g,n,tk){
+  if(s==='ریاضی' && REAL_MATH[g]){const r=(g==='چهارم')?m4Sample(T):mOther(T,g);if(r)return r;}
+  if(s==='علوم' && REAL_SCIENCE[g]){const r=mScience(T,g);if(r)return r;}
+  if(s==='فارسی' && REAL_PERSIAN[g]){const r=mPersian(T,g);if(r)return r;}
+  if(s==='ریاضی' && /اعشار/.test(T)) return `موضوع: ${T} — پایهٔ ${g}\n\n■ ساده\n۱) هر کیلو خرما ۳٫۵ واحد است؛ بهای ۲ کیلو؟\n۲) ۰٫۵ را با ۱٫۲ جمع کن.\n■ متوسط\n۱) از ۵ متر پارچه ۲٫۳ متر بریده شد؛ چند ماند؟\n۲) اختلافِ ۷٫۲ و ۴٫۸؟\n■ چالشی\n۱) ۲٫۵ کیلو خرما (۳٫۵) خرید و ۱۰ واحد داد؛ چقدر پس می‌گیرد؟\n\nپاسخ‌نامه: ۷ و ۱٫۷ · ۲٫۷ و ۲٫۴ · ۱٫۲۵ واحد`;
+  if(s==='ریاضی' && /ضرب|تقسیم/.test(T)) return `موضوع: ${T} — پایهٔ ${g}\n\n■ ساده\n۱) ۳ بستهٔ ۴تایی مداد؛ روی‌هم چند مداد؟\n۲) ۱۲ خرما بینِ ۳ بچه؛ سهمِ هرکدام؟\n■ متوسط\n۱) هر ردیف ۶ صندلی، ۵ ردیف؛ چند صندلی؟\n۲) ۲۴ تخم‌مرغ در جعبه‌های ۶تایی؛ چند جعبه؟\n■ چالشی\n۱) ۷ کیسه هرکدام ۸ کیلو؛ اگر ۹ کیلو کم شود، چند ماند؟\n\nپاسخ‌نامه: ۱۲ و ۴ · ۳۰ و ۴ · ۴۷`;
+  if(s==='علوم' && /مواد|تغییر/.test(T)) return `موضوع: ${T} — پایهٔ ${g}\n\n■ ساده\n۱) آب‌شدنِ یخ چه نوع تغییری است؟\n۲) یک تغییرِ برگشت‌ناپذیر نام ببر.\n■ متوسط\n۱) چرا پختنِ تخم‌مرغ شیمیایی است؟\n۲) دو تغییرِ آشپزخانه را دسته‌بندی کن.\n■ چالشی\n۱) آزمایشی طراحی کن که برگشت‌پذیری را نشان دهد.\n\nپاسخ: فیزیکی=شکل/حالت؛ شیمیایی=مادّهٔ تازه.`;
+  if(s==='علوم' && /گیاه/.test(T)) return `موضوع: ${T} — پایهٔ ${g}\n\n■ ساده\n۱) سه بخشِ اصلیِ گیاه را نام ببر.\n۲) گیاه برای رشد به چه چیزهایی نیاز دارد؟\n■ متوسط\n۱) کارِ ریشه چیست؟ کارِ برگ چیست؟\n۲) یک گیاهِ منطقهٔ خودت را مثال بزن.\n■ چالشی\n۱) یک فعالیتِ مشاهدهٔ یک‌هفته‌ایِ رشدِ دانه طراحی کن.\n\nپاسخ: ریشه=جذبِ آب؛ برگ=غذاسازی.`;
+  if(s==='فارسی' && /جمله/.test(T)) return `موضوع: ${T} — پایهٔ ${g}\n\n■ ساده\n۱) با «بازار» یک جملهٔ کوتاه بساز.\n۲) این را کامل کن: «نخل‌ها ... بودند.»\n■ متوسط\n۱) با «مهربان» و «کمک» یک جمله بنویس.\n۲) دو کلمهٔ هم‌خانوادهٔ «دانش».\n■ چالشی\n۱) یک بندِ سه‌جمله‌ای دربارهٔ یک روزِ خوب بنویس.\n\nراهنما: روی نگارش و نیم‌فاصله تمرکز کن.`;
+  const cap = tk==='worksheet' ? "کاربرگ" : "تمرین";
+  return `${cap} — «${T}» · پایهٔ ${g}\n\n■ ساده\n۱) یک پرسشِ پایه‌ایِ «${T}» متناسبِ پایهٔ ${g}.\n۲) یک نمونهٔ آشنا از «${T}».\n■ متوسط\n۱) کاربردِ «${T}» در یک موقعیتِ واقعی.\n۲) مقایسه یا دسته‌بندیِ مرتبط با «${T}».\n■ چالشی\n۱) یک مسئلهٔ ترکیبیِ «${T}» که چند مرحله دارد.\n\n(ساختار است؛ در ابزار موضوع و پایه را دقیق بده تا سوال‌های واقعی بسازد.)`;
+}
+function mOther(T,g){
+ const H=`تمرین — ${T} (ریاضیِ ${g})`;
+ if(g==='اول'){
+  if(/جمع/.test(T)) return `${H}\n\n۱) ۲ + ۳ = ؟\n۲) ۴ + ۱ = ؟\n۳) ۵ + ۵ = ؟\n\nپاسخ: ۵ ؛ ۵ ؛ ۱۰`;
+  if(/تفریق/.test(T)) return `${H}\n\n۱) ۵ − ۲ = ؟\n۲) ۸ − ۳ = ؟\n۳) ۱۰ − ۴ = ؟\n\nپاسخ: ۳ ؛ ۵ ؛ ۶`;
+  if(/دهگان|یکان/.test(T)) return `${H}\n\n۱) در عددِ ۲۳، رقمِ دهگان چیست؟\n۲) ۱۰ تا و ۵ تا می‌شود چند؟\n\nپاسخ: ۲ ؛ ۱۵`;
+  if(/شکل|هندس/.test(T)) return `${H}\n\n۱) یک توپ شبیهِ کدام شکل است؟\n۲) یک مثلث چند ضلع دارد؟\n۳) دو چیزِ گِرد در کلاس نام ببر.\n\nپاسخ: دایره/کره ؛ ۳ ؛ (مثلاً ساعت، بشقاب)`;
+  if(/الگو/.test(T)) return `${H}\n\n۱) الگو: 🔴🔵🔴🔵… بعدی چیست؟\n۲) الگو: ۱، ۲، ۳، … عددِ بعدی؟\n\nپاسخ: 🔴 ؛ ۴`;
+  if(/دسته|مقایسه/.test(T)) return `${H}\n\n۱) کدام گروه بیشتر است: ۳ سیب یا ۵ سیب؟\n۲) مدادها را به رنگ دسته‌بندی کن.\n\nپاسخ: ۵ سیب ؛ (بر اساسِ رنگ)`;
+  if(/اندازه|طول/.test(T)) return `${H}\n\n۱) کدام بلندتر است: مداد یا خط‌کش؟\n۲) دو چیزِ کوتاه در کلاس نام ببر.\n\nپاسخ: خط‌کش ؛ (مثلاً پاک‌کن، مداد)`;
+  if(/زمان|ترتیب/.test(T)) return `${H}\n\n۱) بعد از صبح چه وقتی می‌آید؟\n۲) اول، دوم، … نفرِ بعدی چندم است؟\n\nپاسخ: ظهر ؛ سوم`;
+  if(/شمارش|عدد/.test(T)) return `${H}\n\n۱) بعد از عددِ ۶ چه عددی می‌آید؟\n۲) کدام بیشتر است: ۴ یا ۷؟\n۳) از ۱ تا ۵ بشمار و بنویس.\n\nپاسخ: ۷ ؛ ۷ ؛ ۱ ۲ ۳ ۴ ۵`;
+ }
+ if(g==='دوم'){
+  if(/جمع|تفریق/.test(T)) return `${H}\n\n۱) ۳۴ + ۲۵ = ؟\n۲) ۴۸ − ۱۳ = ؟\n۳) ۲۷ + ۱۹ = ؟\n۴) ۵۰ − ۲۶ = ؟\n\nپاسخ: ۵۹ ؛ ۳۵ ؛ ۴۶ ؛ ۲۴`;
+  if(/کسر|احتمال/.test(T)) return `${H}\n\n۱) نصفِ ۸ چند است؟\n۲) یک‌چهارمِ ۱۲ چند است؟\n۳) در پرتابِ سکه، شیر محتمل‌تر است یا خط؟\n\nپاسخ: ۴ ؛ ۳ ؛ برابر`;
+  if(/هندس|شکل/.test(T)) return `${H}\n\n۱) یک مثلث چند ضلع دارد؟\n۲) یک مربع چند گوشه دارد؟\n۳) دو چیزِ مستطیلی در کلاس نام ببر.\n\nپاسخ: ۳ ؛ ۴ ؛ (مثلاً در، کتاب)`;
+  if(/اندازه/.test(T)) return `${H}\n\n۱) ۱ متر چند سانتی‌متر است؟\n۲) عقربه‌ها روی ۳، چه ساعتی است؟\n۳) کدام بلندتر است: خودکار یا در؟\n\nپاسخ: ۱۰۰ ؛ ساعت ۳ ؛ در`;
+  if(/آمار|نمودار/.test(T)) return `${H}\n\n۱) در جدولی ۵ سیب و ۳ پرتقال داریم؛ کدام بیشتر است؟\n۲) روی‌هم چند میوه؟\n\nپاسخ: سیب ؛ ۸`;
+  if(/عدد|رقم/.test(T)) return `${H}\n\n۱) در عددِ ۳۴۵، رقمِ صدگان چیست؟\n۲) عددِ بعد از ۲۹۹ چند است؟\n۳) «دویست و هفت» را با رقم بنویس.\n\nپاسخ: ۳ ؛ ۳۰۰ ؛ ۲۰۷`;
+ }
+ if(g==='سوم'){
+  if(/ضرب|تقسیم/.test(T)) return `${H}\n\n■ ساده\n۱) ۶ × ۷ = ؟\n۲) ۲۴ ÷ ۴ = ؟\n■ متوسط\n۱) ۸ × ۹ = ؟\n۲) ۴۵ ÷ ۹ = ؟\n■ چالشی\n۱) ۷ × ۶ + ۳ = ؟\n\nپاسخ: ۴۲ ؛ ۶ ؛ ۷۲ ؛ ۵ ؛ ۴۵`;
+  if(/کسر/.test(T)) return `${H}\n\n■ ساده\n۱) آیا ۱/۲ با ۲/۴ برابر است؟\n۲) کدام بزرگ‌تر است: ۱/۳ یا ۲/۳؟\n■ چالشی\n۱) از پیتزای ۸تکه، نصفش چند تکه است؟\n\nپاسخ: بله ؛ ۲/۳ ؛ ۴`;
+  if(/محیط|مساحت|سطح/.test(T)) return `${H}\n\n■ ساده\n۱) محیطِ مربعِ ضلع ۵ چند است؟\n۲) مساحتِ مستطیلِ ۴ در ۳ چند است؟\n■ چالشی\n۱) محیطِ همان مستطیل چند است؟\n\nپاسخ: ۲۰ ؛ ۱۲ ؛ ۱۴`;
+  if(/الگو|ماشین/.test(T)) return `${H}\n\n■ ساده\n۱) الگو: ۲، ۴، ۶، ۸، … عددِ بعدی؟\n۲) ماشینِ «+۳»: ورودی ۵ → خروجی؟\n■ چالشی\n۱) الگوِ ۵، ۱۰، ۱۵ چه قاعده‌ای دارد؟\n\nپاسخ: ۱۰ ؛ ۸ ؛ ‎+۵`;
+  if(/عدد|ارزش|رقم|تقریب|پول/.test(T)) return `${H}\n\n■ ساده\n۱) در عددِ ۴۵۶۷، ارزشِ رقمِ ۵؟\n۲) بزرگ‌ترین عددِ چهاررقمی با ۲،۰،۷،۹؟\n■ چالشی\n۱) ۳۴۵۶ را به نزدیک‌ترین هزار گِرد کن.\n\nپاسخ: ۵۰۰ ؛ ۹۷۲۰ ؛ ۳۰۰۰`;
+  if(/آمار|نمودار|جدول|احتمال/.test(T)) return `${H}\n\n۱) در پرتابِ تاس، احتمالِ آمدنِ ۶ چقدر است؟\n۲) نمودارِ دایره‌ای برای چه چیزی خوب است؟\n\nپاسخ: ۱ از ۶ ؛ نمایشِ سهمِ هر بخش از کل`;
+  if(/ساعت|زمان/.test(T)) return `${H}\n\n۱) ساعتِ ۴ بعدازظهر یعنی چند؟\n۲) از ساعتِ ۲ تا ۵ چند ساعت می‌گذرد؟\n\nپاسخ: ۱۶ ؛ ۳`;
+ }
+ if(g==='پنجم'){
+  if(/کسر|مخلوط/.test(T)) return `${H}\n\n■ ساده\n۱) ۲/۳ × ۳/۴ = ؟\n۲) «۲ و ۱/۲» را به کسر بنویس.\n■ متوسط\n۱) ۱/۲ ÷ ۱/۴ = ؟\n■ چالشی\n۱) ۳/۵ × ۱۰ = ؟\n\nپاسخ: ۱/۲ ؛ ۵/۲ ؛ ۲ ؛ ۶`;
+  if(/نسبت|تناسب|درصد/.test(T)) return `${H}\n\n■ ساده\n۱) ۲۰٪ از ۵۰ چند است؟\n۲) نسبتِ ۳ به ۶ را ساده کن.\n■ چالشی\n۱) اگر ۲ مداد ۶ واحد باشد، ۵ مداد چند؟\n\nپاسخ: ۱۰ ؛ ۱/۲ ؛ ۱۵`;
+  if(/اعشار/.test(T)) return `${H}\n\n■ ساده\n۱) ۱٫۲۵ + ۲٫۵ = ؟\n۲) ۳ × ۰٫۴ = ؟\n■ چالشی\n۱) ۵٫۶ − ۱٫۸ = ؟\n\nپاسخ: ۳٫۷۵ ؛ ۱٫۲ ؛ ۳٫۸`;
+  if(/تقارن|چندضلعی|زاویه|نیم‌ساز/.test(T)) return `${H}\n\n۱) مجموعِ زاویه‌های یک مثلث چند درجه است؟\n۲) یک شکل با تقارنِ محوری نام ببر.\n۳) نیم‌ساز با یک زاویه چه می‌کند؟\n\nپاسخ: ۱۸۰ ؛ مربع/مستطیل ؛ آن را نصف می‌کند`;
+  if(/مساحت|محیط|لوزی|ذوزنقه|حجم|دایره/.test(T)) return `${H}\n\n۱) مساحتِ لوزی با قطرهای ۶ و ۸ چند است؟\n۲) محیطِ دایره با شعاعِ ۷ (≈۳٫۱۴)؟\n۳) حجمِ مکعبِ ضلع ۳ چند است؟\n\nپاسخ: ۲۴ ؛ ≈۴۴ ؛ ۲۷`;
+  if(/آمار|احتمال|میانگین|داده/.test(T)) return `${H}\n\n۱) میانگینِ ۴، ۶ و ۸ چند است؟\n۲) در تاس، احتمالِ عددِ زوج چقدر است؟\n\nپاسخ: ۶ ؛ ۱/۲`;
+  if(/الگو|عددنویسی|مرکب/.test(T)) return `${H}\n\n۱) الگوِ ۳، ۶، ۱۲، ۲۴ چه قاعده‌ای دارد؟\n۲) ۲ ساعت و ۳۰ دقیقه + ۱ ساعت و ۴۵ دقیقه؟\n\nپاسخ: ×۲ ؛ ۴ ساعت و ۱۵ دقیقه`;
+ }
+ if(g==='ششم'){
+  if(/کسر/.test(T)) return `${H}\n\n■ ساده\n۱) ۳/۴ × ۸ = ؟\n۲) ۱/۲ + ۲/۳ = ؟\n■ چالشی\n۱) ۲/۳ ÷ ۴/۵ = ؟\n\nپاسخ: ۶ ؛ ۷/۶ ؛ ۵/۶`;
+  if(/اعشار/.test(T)) return `${H}\n\n■ ساده\n۱) ۴٫۸ ÷ ۲ = ؟\n۲) ۰٫۲۵ × ۴ = ؟\n■ چالشی\n۱) ۶ ÷ ۰٫۵ = ؟\n\nپاسخ: ۲٫۴ ؛ ۱ ؛ ۱۲`;
+  if(/درصد|نسبت|تناسب/.test(T)) return `${H}\n\n۱) ۱۵٪ از ۲۰۰ چند است؟\n۲) قیمتِ ۵۰۰۰ با ۲۰٪ تخفیف چند می‌شود؟\n۳) نسبتِ ۴ به ۱۰ را به درصد بنویس.\n\nپاسخ: ۳۰ ؛ ۴۰۰۰ ؛ ۴۰٪`;
+  if(/تقارن|مختصات/.test(T)) return `${H}\n\n۱) نقطهٔ (۳، ۲) در کدام ناحیه است؟\n۲) قرینهٔ (۲، ۵) نسبت به محورِ x چیست؟\n\nپاسخ: ناحیهٔ اول ؛ (۲، −۵)`;
+  if(/مساحت|دایره|حجم|جرم|اندازه/.test(T)) return `${H}\n\n۱) مساحتِ دایره با شعاعِ ۵ (≈۳٫۱۴)؟\n۲) محیطِ همان دایره چند است؟\n۳) حجمِ مکعب‌مستطیلِ ۲×۳×۴ چند است؟\n\nپاسخ: ۷۸٫۵ ؛ ۳۱٫۴ ؛ ۲۴`;
+  if(/الگو|عددنویسی|تقریب/.test(T)) return `${H}\n\n۱) الگوِ ۱، ۴، ۹، ۱۶ عددِ بعدی؟\n۲) حاصلِ تقریبیِ ۴۹ × ۲۱ چقدر است؟\n\nپاسخ: ۲۵ ؛ ۱۰۰۰`;
+  if(/آمار|احتمال|داده/.test(T)) return `${H}\n\n۱) میانگینِ ۵، ۷ و ۹ چند است؟\n۲) در تاس، احتمالِ عددِ بزرگ‌تر از ۴ چقدر است؟\n\nپاسخ: ۷ ؛ ۲/۶`;
+ }
+ return null;
+}
+function m4Sample(T){
+ if(/میلیون|عددنویس/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) عددِ ۳۴۰۵۰۲۷ را به حروف بنویس.\n۲) در عددِ ۶۲۸۴۱۹، رقمِ طبقهٔ هزار کدام است؟\n■ متوسط\n۱) با رقم‌های ۲،۵،۰،۹،۱،۴،۷ بزرگ‌ترین عددِ هفت‌رقمی را بساز.\n۲) «دو میلیون و سی هزار و پنج» را با رقم بنویس.\n■ چالشی\n۱) عددی هفت‌رقمی بنویس که رقمِ میلیونش ۴ و رقمِ یکانش ۹ باشد.\n\nپاسخ: سه‌میلیون‌و…؛ ۶۲۸؛ ۹۷۵۴۲۱۰؛ ۲۰۳۰۰۰۵`;
+ if(/الگو|ماشین|ورودی/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) الگو: ۳، ۷، ۱۱، ۱۵، … دو عددِ بعدی؟\n۲) قاعدهٔ این الگو چیست؟\n■ متوسط\n۱) ماشینِ «×۴+۱»: ورودی ۵ → خروجی؟ ورودی ۰ → خروجی؟\n۲) اگر خروجی ۲۵ باشد، ورودی چند بوده؟\n■ چالشی\n۱) ماشینی بساز که ۲ را به ۷ و ۳ را به ۱۰ ببرد؛ قاعده؟\n\nپاسخ: ۱۹ و ۲۳ (+۴)؛ ۲۱ و ۱؛ ۶؛ قاعده ×۳+۱`;
+ if(/کسر/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) ۲/۵ + ۱/۵ = ؟\n۲) کدام بزرگ‌تر است: ۳/۴ یا ۱/۴؟\n■ متوسط\n۱) آیا ۲/۴ با ۱/۲ برابر است؟ چرا؟\n۲) ۳ × ۱/۸ = ؟\n■ چالشی\n۱) از یک پیتزای ۸تکه، ۳ تکه خورده شد؛ چه کسری خورده و چه کسری ماند؟\n\nپاسخ: ۳/۵ ؛ ۳/۴ ؛ بله (برابرند) ؛ ۳/۸ ؛ خورده ۳/۸ و ماند ۵/۸`;
+ if(/تقریب/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) ۴۸ را به نزدیک‌ترین دهگان گِرد کن.\n۲) حاصلِ تقریبیِ ۳۱ × ۱۹ چقدر است؟\n■ متوسط\n۱) ۶۷۳ را به نزدیک‌ترین صدگان گِرد کن.\n۲) خریدِ ۲۹۰۰ + ۵۱۰۰ تومان تقریباً چند؟\n■ چالشی\n۱) بدونِ محاسبهٔ دقیق: ۴۹ × ۲۱ به ۱۰۰۰ نزدیک‌تر است یا ۱۲۰۰؟\n\nپاسخ: ۵۰ ؛ ۶۰۰ ؛ ۷۰۰ ؛ ۸۰۰۰ ؛ ۱۰۰۰`;
+ if(/ضرب/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) ۲۳ × ۴ = ؟\n۲) ۱۲ × ۱۰ = ؟\n■ متوسط\n۱) ۲۳ × ۴۵ = ؟\n۲) ۳۶ × ۲۷ = ؟\n■ چالشی\n۱) هر جعبه ۲۴ خرما دارد؛ ۱۵ جعبه چند خرما می‌شود؟\n\nپاسخ: ۹۲ ؛ ۱۲۰ ؛ ۱۰۳۵ ؛ ۹۷۲ ؛ ۳۶۰`;
+ if(/تقسیم|بخش/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) ۸۴ ÷ ۶ = ؟\n۲) آیا ۱۲۰ بر ۳ بخش‌پذیر است؟\n■ متوسط\n۱) ۳۶۵ ÷ ۵ = ؟ (باقی‌مانده؟)\n۲) آیا ۲۴۶ بر ۲ و بر ۳ بخش‌پذیر است؟\n■ چالشی\n۱) ۴۸۰ خرما را در جعبه‌های ۲۴تایی بچین؛ چند جعبه؟\n\nپاسخ: ۱۴ ؛ بله ؛ ۷۳ با باقی ۰ ؛ بله و بله ؛ ۲۰`;
+ if(/زاویه/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) زاویهٔ ۹۰ درجه چه نام دارد؟\n۲) زاویهٔ کوچک‌تر از قائمه چه نام دارد؟\n■ متوسط\n۱) یک زاویهٔ باز (منفرجه) بکش و تخمین بزن چند درجه است.\n۲) دو زاویهٔ قائمه کنارِ هم چند درجه می‌شود؟\n■ چالشی\n۱) ساعتِ ۳، عقربه‌ها چه زاویه‌ای می‌سازند؟\n\nپاسخ: قائمه ؛ تند(حاده) ؛ بیشتر از ۹۰ ؛ ۱۸۰ ؛ ۹۰ درجه`;
+ if(/زمان/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) ۲ ساعت چند دقیقه است؟\n۲) ۹۰ دقیقه چند ساعت و چند دقیقه؟\n■ متوسط\n۱) ۲ ساعت و ۴۵ دقیقه = چند دقیقه؟\n۲) از ۸:۱۵ تا ۹:۵۰ چند دقیقه گذشته؟\n■ چالشی\n۱) فیلمی ۱ ساعت و ۵۰ دقیقه‌ای، ۷:۲۰ شروع شد؛ کِی تمام می‌شود؟\n\nپاسخ: ۱۲۰ ؛ ۱ و ۳۰ ؛ ۱۶۵ ؛ ۹۵ ؛ ۹:۱۰`;
+ if(/طول/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) ۳ متر چند سانتی‌متر است؟\n۲) ۲۵۰ سانتی‌متر چند متر و چند سانتی‌متر؟\n■ متوسط\n۱) ۳ متر و ۲۰ سانتی‌متر = چند سانتی‌متر؟\n۲) دورِ میزی ۱۲۰ در ۸۰ سانتی چند متر است؟\n■ چالشی\n۱) طنابی ۵ متری را به قطعه‌های ۴۰ سانتی می‌بریم؛ چند قطعه و چقدر باقی؟\n\nپاسخ: ۳۰۰ ؛ ۲م و ۵۰ ؛ ۳۲۰ ؛ ۴ متر ؛ ۱۲ قطعه و ۲۰ س‌م`;
+ if(/مخلوط/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) ۷/۴ را به عددِ مخلوط تبدیل کن.\n۲) «۱ و ۱/۲» را روی محورِ عدد نشان بده.\n■ متوسط\n۱) «۲ و ۳/۵» را به کسرِ بزرگ‌تر از واحد بنویس.\n۲) کدام بزرگ‌تر است: «۱ و ۳/۴» یا «۲»؟\n■ چالشی\n۱) دو بطریِ «۱ و ۱/۲» لیتری چند لیتر آب دارند؟\n\nپاسخ: ۱ و ۳/۴ ؛ — ؛ ۱۳/۵ ؛ ۲ ؛ ۳ لیتر`;
+ if(/اعشار|ارزش مکان/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) ۰٫۳ + ۰٫۴ = ؟\n۲) ارزشِ رقمِ ۷ در عددِ ۵٫۷ چیست؟\n■ متوسط\n۱) ۲٫۵ + ۱٫۳۵ = ؟\n۲) ۴٫۶ − ۱٫۸ = ؟\n■ چالشی\n۱) دفتری ۱٫۷۵ و مدادی ۰٫۵ واحد است؛ جمعِ خرید و باقی‌ماندهٔ ۳ واحد؟\n\nپاسخ: ۰٫۷ ؛ هفت‌دهم ؛ ۳٫۸۵ ؛ ۲٫۸ ؛ جمع ۲٫۲۵ و باقی ۰٫۷۵`;
+ if(/مساحت|محیط|متوازی|مثلث/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) مساحتِ مستطیلِ ۶ در ۴ چند است؟\n۲) محیطِ همان مستطیل چند است؟\n■ متوسط\n۱) مساحتِ مثلثی با قاعدهٔ ۸ و ارتفاعِ ۵ چند است؟\n۲) مساحتِ متوازی‌الاضلاع با قاعدهٔ ۷ و ارتفاعِ ۴؟\n■ چالشی\n۱) زمینی مستطیلی ۱۲ در ۹؛ مساحت و محیطش؟\n\nپاسخ: ۲۴ ؛ ۲۰ ؛ ۲۰ ؛ ۲۸ ؛ مساحت ۱۰۸ و محیط ۴۲`;
+ if(/عمود|موازی|چهارضلع/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) دو خطِ عمود بر هم چه زاویه‌ای می‌سازند؟\n۲) دو ضلعِ روبه‌روی مستطیل نسبت به هم چگونه‌اند؟\n■ متوسط\n۱) یک چهارضلعی نام ببر که همهٔ ضلع‌هایش برابرند.\n۲) فرقِ مربع و مستطیل در چیست؟\n■ چالشی\n۱) یک متوازی‌الاضلاع بکش که مستطیل نباشد و بگو چرا.\n\nپاسخ: ۹۰ درجه ؛ موازی ؛ مربع/لوزی ؛ در مربع همهٔ ضلع‌ها برابرند`;
+ if(/نمودار|احتمال/.test(T)) return `تمرین — ${T} (ریاضیِ چهارم)\n\n■ ساده\n۱) در پرتابِ یک تاس، احتمالِ آمدنِ عددِ ۳ چقدر است؟\n۲) در نمودارِ خطِ شکسته، بالاترین نقطه چه چیزی را نشان می‌دهد؟\n■ متوسط\n۱) دمای هفته: شنبه ۲۰، یک‌شنبه ۲۳، دوشنبه ۱۹؛ گرم‌ترین روز؟\n۲) در تاس، احتمالِ عددِ زوج چقدر است؟\n■ چالشی\n۱) یک نمودارِ خطِ شکسته برای رشدِ گیاه در ۴ هفته طراحی کن.\n\nپاسخ: ۱ از ۶ ؛ بیشترین مقدار ؛ یک‌شنبه ؛ ۳ از ۶ (نصف)`;
+ return null;
+}
+function mScience(T,g){
+ const H=`تمرین — ${T} (علومِ ${g})`;
+ if(/زنگ علوم/.test(T)) return `${H}\n\n■ ساده\n۱) امروز چه چیزی در طبیعت دیدی که برایت جالب بود؟\n۲) یک سوال دربارهٔ آن بنویس.\n■ متوسط\n۱) با یک وسیلهٔ ساده (سیم، قالب و…) یک آزمایشِ کوچک انجام بده و مشاهده‌ات را بنویس.\n۲) پیش‌بینی کن نتیجه چه می‌شود، بعد امتحان کن.\n■ چالشی\n۱) نتیجهٔ آزمایش را برای کلاس توضیح بده و بگو چرا این‌طور شد.\n\nراهنما: هدف، تمرینِ مشاهده و پرسشگری است، نه پاسخِ ثابت.`;
+ if(/سلام،? به من نگاه کن|حواس/.test(T)) return `${H}\n\n■ ساده\n۱) پنج حسّ را نام ببر.\n۲) با کدام حس، بو را می‌فهمی؟\n■ متوسط\n۱) چشمانت را ببند و با لمس‌کردن یک شیء را حدس بزن.\n■ چالشی\n۱) توضیح بده اگر یکی از حواس نباشد، زندگی چطور تغییر می‌کند.\n\nراهنما: تمرینِ عملی با اشیایِ آشنا انجام شود.`;
+ if(/سالم باش|شاداب باش/.test(T)) return `${H}\n\n■ ساده\n۱) دو کارِ روزانه برایِ سالم‌ماندن نام ببر.\n۲) چرا باید دست‌هایمان را بشوییم؟\n■ متوسط\n۱) یک برنامهٔ روزانهٔ سالم برایِ خودت بنویس.\n■ چالشی\n۱) دربارهٔ یک عادتِ سالم که دوست داری شروع کنی بنویس.\n\nراهنما: بدونِ اشاره به اطلاعاتِ سلامتیِ خصوصی.`;
+ if(/جانوران/.test(T)) return `${H}\n\n■ ساده\n۱) نامِ سه جانور را که دیده‌ای بنویس.\n۲) یکی از آن‌ها چه می‌خورد؟\n■ متوسط\n۱) یک جانورِ خانگی و یک جانورِ وحشی را مقایسه کن.\n۲) این جانور کجا زندگی می‌کند؟\n■ چالشی\n۱) دربارهٔ زندگیِ یک جانورِ منطقه‌ات یک بندِ کوتاه بنویس.\n\nراهنما: روی مشاهده و توصیف تمرکز کن، نه حفظیات.`;
+ if(/گیاهان/.test(T)) return `${H}\n\n■ ساده\n۱) سه بخشِ اصلیِ یک گیاه را نام ببر.\n۲) گیاه برای رشد به چه چیزهایی نیاز دارد؟\n■ متوسط\n۱) کارِ ریشه چیست؟ کارِ برگ چیست؟\n۲) یک گیاهِ آشنا در منطقه‌ات را مثال بزن.\n■ چالشی\n۱) یک فعالیتِ مشاهده‌ی رشدِ دانه در چند روز طراحی کن.\n\nراهنما: ریشه=جذبِ آب، برگ=غذاسازی.`;
+ if(/پرآب|سنگی|خاکی|خاکِ باارزش|سنگ‌ها/.test(T)) return `${H}\n\n■ ساده\n۱) دو نوع سنگ یا خاک که دیده‌ای نام ببر.\n۲) آب در طبیعت کجاها دیده می‌شود؟\n■ متوسط\n۱) چرا خاک برای زندگی مهم است؟\n۲) یک نمونهٔ سنگ یا خاک را لمس کن و ویژگی‌هایش را بنویس.\n■ چالشی\n۱) دربارهٔ حفظِ خاک و آبِ منطقه‌ات یک پیشنهاد بده.\n\nراهنما: مشاهدهٔ عینی و نمونه‌برداری در کلاس کمک می‌کند.`;
+ if(/می‌خواهم بسازم|بسازیم و لذت|جست‌وجو کنیم و بسازیم|طراحی کنیم و بسازیم/.test(T)) return `${H}\n\n■ ساده\n۱) با وسایلِ ساده (مقوا، نخ، بطری) چه چیزی می‌توانی بسازی؟\n۲) طرحت را بکش.\n■ متوسط\n۱) وسیله‌ات را بساز و امتحان کن؛ چه مشکلی داشت؟\n■ چالشی\n۱) طرح را بهتر کن و بگو چه چیزی تغییر کرد.\n\nراهنما: تاکید بر آزمایش‌وخطا و بازطراحی است.`;
+ if(/اطراف ما|سرد و گرم|چه خبر/.test(T)) return `${H}\n\n■ ساده\n۱) امروز هوا سرد بود یا گرم؟\n۲) چه لباسی متناسبِ این هواست؟\n■ متوسط\n۱) دو نشانه از تغییرِ فصل در منطقه‌ات بنویس.\n■ چالشی\n۱) یک هفته دمای هوا را یادداشت کن و مقایسه کن.\n\nراهنما: ثبتِ روزانه، مهارتِ داده‌جمع‌کنی را تمرین می‌کند.`;
+ if(/خانه تا مدرسه/.test(T)) return `${H}\n\n■ ساده\n۱) مسیرِ خانه تا مدرسه‌ات را توصیف کن.\n۲) در راه چه چیزهایی می‌بینی؟\n■ متوسط\n۱) یک نکتهٔ ایمنی در این مسیر بنویس.\n■ چالشی\n۱) نقشهٔ ساده‌ای از مسیر بکش و نشانه‌ها را بگذار.\n\nراهنما: تمرینِ مشاهده و جهت‌یابی.`;
+ if(/آهنربا/.test(T)) return `${H}\n\n■ ساده\n۱) آهنربا چه چیزهایی را جذب می‌کند؟\n۲) دو وسیلهٔ خانه که آهن دارند نام ببر.\n■ متوسط\n۱) آزمایش کن آهنربا از پشتِ کاغذ اثر دارد یا نه.\n■ چالشی\n۱) با آهنربا یک بازیِ ساده طراحی کن.\n\nراهنما: پاسخ از راهِ آزمایشِ واقعی به‌دست می‌آید.`;
+ if(/گذشته تا آینده/.test(T)) return `${H}\n\n■ ساده\n۱) یک وسیله را نام ببر که قدیمی‌تر شکلِ متفاوتی داشت.\n۲) امروز چه تفاوتی کرده؟\n■ متوسط\n۱) از بزرگ‌ترهای خانواده بپرس این وسیله قبلاً چطور بود.\n■ چالشی\n۱) حدس بزن این وسیله در آینده چه شکلی می‌شود.\n\nراهنما: تمرینِ مقایسهٔ زمانی و مصاحبه.`;
+ if(/گردشِ زمین|گردش زمین/.test(T)) return `${H}\n\n■ ساده\n۱) شب و روز چطور به‌وجود می‌آیند؟\n۲) خورشید صبح از کدام سمت دیده می‌شود؟\n■ متوسط\n۱) یک مدلِ ساده با توپ و چراغ‌قوه بساز و بگردان.\n■ چالشی\n۱) توضیح بده چرا همه‌جای زمین هم‌زمان روز نیست.\n\nراهنما: مدل‌سازیِ فیزیکی، فهم را ساده می‌کند.`;
+ if(/پیامِ رمز|اگر تمام شود/.test(T)) return `${H}\n\n■ ساده\n۱) یک منبعِ طبیعی که در خانه استفاده می‌کنید نام ببرید.\n۲) اگر این منبع تمام شود چه می‌شود؟\n■ متوسط\n۱) دو راه برای کم‌مصرف‌کردنِ آن پیشنهاد بده.\n■ چالشی\n۱) یک پوستر یا شعارِ کوتاه برایِ صرفه‌جویی بساز.\n\nراهنما: تمرکز بر مسئولیتِ فردی و پایداری.`;
+ if(/کاشتنِ دانه|من رشد می‌کنم|بکارید/.test(T)) return `${H}\n\n■ ساده\n۱) یک دانه برای رشد به چه چیزهایی نیاز دارد؟\n۲) هر روز چه کاری باید برایش انجام دهی؟\n■ متوسط\n۱) رشدِ دانه را چند روز مشاهده کن و یادداشت کن.\n■ چالشی\n۱) نموداری از قدِ گیاه در طولِ روزها رسم کن.\n\nراهنما: ثبتِ منظم، مهارتِ دانشمندانه است.`;
+ if(/آشیانه/.test(T)) return `${H}\n\n■ ساده\n۱) پرنده‌ها آشیانه را از چه چیزهایی می‌سازند؟\n۲) چرا به آشیانه نیاز دارند؟\n■ متوسط\n۱) آشیانهٔ دو پرندهٔ متفاوت را مقایسه کن.\n■ چالشی\n۱) با موادِ طبیعی یک مدلِ آشیانه بساز.\n\nراهنما: مشاهده و ساختِ دستی با هم ترکیب شوند.`;
+ if(/جشن/.test(T)) return `${H}\n\n■ ساده\n۱) برای یک جشنِ کلاسی چه وسایلی لازم است؟\n۲) کدام وسیله را می‌توان دوباره استفاده کرد؟\n■ متوسط\n۱) یک برنامه‌ریزیِ کوتاه برای آماده‌شدنِ جشن بنویس.\n■ چالشی\n۱) بعد از جشن، چطور می‌توان زباله را کمتر کرد؟\n\nراهنما: ربط دادنِ علوم به مسئولیتِ زیست‌محیطی.`;
+ if(/خوراکی/.test(T)) return `${H}\n\n■ ساده\n۱) سه خوراکیِ سالم نام ببر.\n۲) یکی از آن‌ها از کجا به‌دست می‌آید؟\n■ متوسط\n۱) خوراکی‌های امروزِ خودت را دسته‌بندی کن (میوه، غله، لبنیات).\n■ چالشی\n۱) یک وعدهٔ غذاییِ سالم و متنوع پیشنهاد بده.\n\nراهنما: تمرکز بر تنوع و تعادلِ غذایی.`;
+ if(/اندازه‌گیریِ مواد/.test(T)) return `${H}\n\n■ ساده\n۱) با چه وسیله‌ای طول را اندازه می‌گیریم؟ با چه وسیله‌ای جرم را؟\n۲) یک وسیلهٔ اندازه‌گیری در آشپزخانه نام ببر.\n■ متوسط\n۱) طولِ میزِ کلاس را با خط‌کش اندازه بگیر و بنویس.\n■ چالشی\n۱) جرمِ دو جسم را مقایسه کن و بگو کدام سنگین‌تر است و چرا.\n\nراهنما: استفاده از وسایلِ واقعیِ کلاس.`;
+ if(/موادّ اطرافِ ما/.test(T)) return `${H}\n\n■ ساده\n۱) سه جسم دورِ خودت را نام ببر و بگو از چه جنسی‌اند.\n۲) کدام جسم سخت است و کدام نرم؟\n■ متوسط\n۱) اجسام را بر اساسِ جنس (فلز، چوب، پلاستیک) دسته‌بندی کن.\n■ چالشی\n۱) یک جسم را که چند نوع مادّه دارد پیدا کن و توضیح بده.\n\nراهنما: دسته‌بندی، مهارتِ علمیِ پایه است.`;
+ if(/آب،? مادّه|زندگیِ ما و آب/.test(T)) return `${H}\n\n■ ساده\n۱) آب در چه کارهای روزانه‌ای استفاده می‌شود؟\n۲) چرا آب برایِ زندگی مهم است؟\n■ متوسط\n۱) دو راه برای صرفه‌جوییِ آب در خانه بنویس.\n■ چالشی\n۱) دربارهٔ اهمیتِ آب در منطقه‌ای مثلِ ایرانشهر یک بندِ کوتاه بنویس.\n\nراهنما: می‌توان با موضوعِ آب و کم‌آبیِ منطقه‌ای پیوند داد.`;
+ if(/نور/.test(T)) return `${H}\n\n■ ساده\n۱) دو منبعِ نور نام ببر.\n۲) سایه چطور به‌وجود می‌آید؟\n■ متوسط\n۱) با یک چراغ‌قوه و یک شیء، سایه بساز و اندازه‌اش را تغییر بده.\n■ چالشی\n۱) توضیح بده چرا نمی‌توانیم از پشتِ دیوار چیزی ببینیم.\n\nراهنما: نور به‌طورِ مستقیم حرکت می‌کند.`;
+ if(/نیرو/.test(T)) return `${H}\n\n■ ساده\n۱) وقتی توپ را می‌زنی، چه چیزی باعثِ حرکتش می‌شود؟\n۲) یک نیرو که هر روز حس می‌کنی نام ببر.\n■ متوسط\n۱) با هُل‌دادن و کشیدن، دو شیء را حرکت بده و تفاوت را بنویس.\n■ چالشی\n۱) چرا اجسامِ سنگین‌تر، حرکت‌دادنشان سخت‌تر است؟\n\nراهنما: نیرو یعنی هُل‌دادن یا کشیدن.`;
+ if(/جایِ خود/.test(T)) return `${H}\n\n■ ساده\n۱) وسایلِ کلاس را در دو گروه دسته‌بندی کن.\n۲) چرا هر چیزی جایِ مشخصی دارد؟\n■ متوسط\n۱) یک قاعدهٔ دسته‌بندیِ جدید پیشنهاد بده.\n■ چالشی\n۱) دسته‌بندیِ خودت را برایِ کلاس توضیح بده.\n\nراهنما: مهارتِ طبقه‌بندی، پایهٔ تفکرِ علمی است.`;
+ if(/مخلوط/.test(T)) return `${H}\n\n■ ساده\n۱) دو مخلوط که در خانه می‌بینی نام ببر (مثلاً سالاد).\n۲) آیا می‌توان اجزای آن را دوباره جدا کرد؟\n■ متوسط\n۱) آب‌نمک بساز و مشاهده کن نمک کجا رفت.\n■ چالشی\n۱) یک روش برایِ جداکردنِ شن از آب پیشنهاد بده.\n\nراهنما: مخلوط یعنی کنارِ هم بودن، نه تغییرِ مادّه.`;
+ if(/انرژی/.test(T)) return `${H}\n\n■ ساده\n۱) برای روشن‌شدنِ لامپ به چه چیزی نیاز داریم؟\n۲) دو وسیلهٔ برقی در خانه نام ببر.\n■ متوسط\n۱) یک راه برای کم‌مصرف‌کردنِ برق در خانه بنویس.\n■ چالشی\n۱) توضیح بده انرژیِ خورشیدی چطور می‌تواند جایگزینِ برق شود.\n\nراهنما: ایرانشهر آفتابِ زیادی دارد؛ می‌توان به انرژیِ خورشیدی اشاره کرد.`;
+ if(/گرما/.test(T)) return `${H}\n\n■ ساده\n۱) وقتی یخ در آفتاب می‌ماند چه اتفاقی می‌افتد؟\n۲) یک وسیلهٔ گرمایشی نام ببر.\n■ متوسط\n۱) آزمایش کن یخ در سایه و آفتاب با چه سرعتی آب می‌شود.\n■ چالشی\n۱) توضیح بده چرا در تابستانِ ایرانشهر باید مراقبِ گرما بود.\n\nراهنما: مقایسه‌ی زمانِ آب‌شدن، مشاهدهٔ کمّی می‌سازد.`;
+ if(/آسمان در شب/.test(T)) return `${H}\n\n■ ساده\n۱) شب چه چیزهایی در آسمان می‌بینی؟\n۲) ماه هر شب یک‌شکل است یا تغییر می‌کند؟\n■ متوسط\n۱) چند شب پشتِ سر هم شکلِ ماه را نقاشی کن.\n■ چالشی\n۱) توضیح بده چرا بعضی شب‌ها ستاره‌های بیشتری دیده می‌شود.\n\nراهنما: آسمانِ صافِ ایرانشهر برای این مشاهده مناسب است.`;
+ if(/بدنِ ما|حرکتِ بدن/.test(T)) return `${H}\n\n■ ساده\n۱) سه اندامِ بدن و کارشان را بنویس.\n۲) چرا باید از بدن مراقبت کنیم؟\n■ متوسط\n۱) با راه‌رفتن و دویدن، تفاوتِ ضربانِ قلب را حس کن و بنویس.\n■ چالشی\n۱) یک برنامهٔ روزانه برایِ سلامتیِ بدن پیشنهاد بده.\n\nراهنما: بدون اشاره به اطلاعاتِ خصوصیِ دانش‌آموز.`;
+ if(/بی‌مهره/.test(T)) return `${H}\n\n■ ساده\n۱) بی‌مهره یعنی چه؟\n۲) یک جانورِ بی‌مهره نام ببر.\n■ متوسط\n۱) بی‌مهره‌ها و مهره‌داران را مقایسه کن.\n■ چالشی\n۱) دربارهٔ یک حشره یا بی‌مهرهٔ منطقه‌ات توضیح بده.\n\nراهنما: می‌توان از حشره‌های رایجِ منطقه مثال زد.`;
+ if(/گوناگونیِ گیاهان/.test(T)) return `${H}\n\n■ ساده\n۱) دو گیاهِ متفاوت که دیده‌ای نام ببر.\n۲) چه تفاوتی با هم دارند؟\n■ متوسط\n۱) گیاهانِ منطقه‌ات را بر اساسِ اندازه دسته‌بندی کن.\n■ چالشی\n۱) توضیح بده چرا گیاهانِ گرمسیری با گیاهانِ سردسیری فرق دارند.\n\nراهنما: نخل و گیاهانِ بومیِ ایرانشهر مثالِ خوبی‌اند.`;
+ if(/زیستگاه/.test(T)) return `${H}\n\n■ ساده\n۱) زیستگاه یعنی چه؟\n۲) زیستگاهِ یک ماهی کجاست؟\n■ متوسط\n۱) زیستگاهِ یک جانورِ منطقه‌ات را توصیف کن.\n■ چالشی\n۱) توضیح بده اگر زیستگاهی از بین برود چه اتفاقی برای جانورانش می‌افتد.\n\nراهنما: می‌توان به رودخانه یا کوهستانِ نزدیکِ ایرانشهر اشاره کرد.`;
+ if(/رنگین‌کمان/.test(T)) return `${H}\n\n■ ساده\n۱) رنگین‌کمان بعد از چه پدیده‌ای دیده می‌شود؟\n۲) چند رنگِ آن را نام ببر.\n■ متوسط\n۱) با یک منشور یا آینه و آب، بازتابِ نور را امتحان کن.\n■ چالشی\n۱) توضیح بده نور از چند رنگ ساخته شده است.\n\nراهنما: آزمایشِ عملی، فهم را ملموس می‌کند.`;
+ if(/تاریخِ زمین/.test(T)) return `${H}\n\n■ ساده\n۱) فسیل چیست؟\n۲) فسیل‌ها به ما چه می‌گویند؟\n■ متوسط\n۱) اگر فسیلی پیدا می‌کردی، چطور دربارهٔ آن تحقیق می‌کردی؟\n■ چالشی\n۱) یک مدلِ سادهٔ فسیل با خمیر بساز و توضیح بده.\n\nراهنما: مقایسهٔ زمانِ خیلی طولانی با زمانِ زندگیِ ما.`;
+ if(/کارها آسان می‌شود/.test(T)) return `${H}\n\n■ ساده\n۱) یک وسیلهٔ ساده که کار را آسان می‌کند نام ببر (مثلاً اهرم، چرخ).\n۲) این وسیله چطور کمک می‌کند؟\n■ متوسط\n۱) یک مثالِ اهرم یا قرقره در خانه پیدا کن.\n■ چالشی\n۱) طرحِ سادهٔ یک ابزارِ کمکی برای یک کارِ روزمره بکش.\n\nراهنما: اهرم، قرقره، سطحِ شیب‌دار نمونه‌های رایج‌اند.`;
+ if(/از ریشه تا برگ|شگفتی‌های برگ/.test(T)) return `${H}\n\n■ ساده\n۱) آب و موادِ غذایی چطور از ریشه به برگ می‌رسند؟\n۲) برگ چه کاری برایِ گیاه انجام می‌دهد؟\n■ متوسط\n۱) رگ‌برگ‌های یک برگ را با ذره‌بین نگاه کن و بکش.\n■ چالشی\n۱) توضیح بده چرا برگ‌ها برایِ زندگیِ گیاه حیاتی‌اند.\n\nراهنما: فتوسنتز به‌زبانِ ساده: برگ با نور، غذا می‌سازد.`;
+ if(/سرگذشتِ دفترِ من|کارخانه‌ی کاغذسازی/.test(T)) return `${H}\n\n■ ساده\n۱) کاغذ از چه چیزی ساخته می‌شود؟\n۲) چرا باید در مصرفِ کاغذ صرفه‌جویی کنیم؟\n■ متوسط\n۱) مسیرِ تبدیلِ چوب به کاغذ را به‌ترتیب بنویس.\n■ چالشی\n۱) یک پیشنهاد برای بازیافتِ کاغذ در مدرسه بده.\n\nراهنما: پیوند با مسئولیتِ زیست‌محیطی.`;
+ if(/اعماقِ زمین|زمینِ پویا/.test(T)) return `${H}\n\n■ ساده\n۱) زیرِ زمین از چه لایه‌هایی تشکیل شده؟\n۲) یک نمونه از تغییراتِ زمین (زلزله، آتشفشان) نام ببر.\n■ متوسط\n۱) یک مدلِ لایه‌ایِ ساده از زمین با خمیر بساز.\n■ چالشی\n۱) توضیح بده چرا در بعضی مناطقِ ایران زلزله بیشتر است.\n\nراهنما: ارتباط با ایمنیِ زلزله می‌تواند مفید باشد.`;
+ if(/ورزش و نیرو/.test(T)) return `${H}\n\n■ ساده\n۱) در ورزش، کدام حرکت‌ها به نیرو نیاز دارند؟\n۲) اصطکاک یعنی چه؟\n■ متوسط\n۱) روی سطحِ صاف و ناصاف یک جسم را هُل بده و مقایسه کن.\n■ چالشی\n۱) توضیح بده چرا کفشِ ورزشی سُر نمی‌خورد.\n\nراهنما: اصطکاک، مقاومتِ سطح در برابرِ حرکت است.`;
+ if(/خیلی کوچک،? خیلی بزرگ/.test(T)) return `${H}\n\n■ ساده\n۱) یک چیزِ خیلی کوچک که با چشم دیده نمی‌شود نام ببر.\n۲) یک چیزِ خیلی بزرگ در جهان نام ببر.\n■ متوسط\n۱) با ذره‌بین یک جسم را نگاه کن و توصیف کن.\n■ چالشی\n۱) توضیح بده چرا دانشمندان از میکروسکوپ و تلسکوپ استفاده می‌کنند.\n\nراهنما: مقیاسِ کوچک تا بزرگ را با مثال‌های آشنا نشان بده.`;
+ if(/جنگل برای کیست/.test(T)) return `${H}\n\n■ ساده\n۱) چه جانورانی در جنگل زندگی می‌کنند؟\n۲) جنگل چه فایده‌ای برای انسان دارد؟\n■ متوسط\n۱) توضیح بده قطعِ درختان چه اثری دارد.\n■ چالشی\n۱) یک پیشنهاد برای حفظِ فضایِ سبزِ منطقه‌ات بده.\n\nراهنما: می‌توان به نخلستان‌ها و فضایِ سبزِ ایرانشهر اشاره کرد.`;
+ if(/سالم بمانیم/.test(T)) return `${H}\n\n■ ساده\n۱) دو عادتِ سالم نام ببر.\n۲) چرا شست‌وشویِ دست مهم است؟\n■ متوسط\n۱) یک برنامهٔ روزانهٔ سالم پیشنهاد بده.\n■ چالشی\n۱) دربارهٔ یک بیماریِ رایج و راهِ پیشگیری از آن تحقیق کن.\n\nراهنما: بدونِ اشاره به اطلاعاتِ سلامتیِ خصوصی.`;
+ return `${H}\n\n■ ساده\n۱) دو نکتهٔ مهم از این درس بنویس.\n۲) یک سوال دربارهٔ این موضوع بپرس.\n■ متوسط\n۱) یک آزمایش یا مشاهدهٔ ساده دربارهٔ این موضوع پیشنهاد بده.\n■ چالشی\n۱) این موضوع را به یک مثالِ واقعی از زندگیِ خودت وصل کن.\n\nراهنما: مشاهده، پرسشگری و آزمایشِ عملی محورِ اصلیِ علوم است.`;
+}
+function mPersian(T,g){
+ const H=`تمرین — ${T} (فارسیِ ${g})`;
+ if(g==='اول'){
+  return `${H}\n\n■ ساده\n۱) یکی از حروفِ «${T}» را در دفترت چند بار تمرین کن.\n۲) یک کلمه با یکی از این حروف بگو.\n■ متوسط\n۱) دو کلمه با این حروف بساز و برای دوستت بخوان.\n۲) یکی از کلمه‌ها را در یک جملهٔ کوتاه به‌کار ببر.\n■ چالشی\n۱) یک جملهٔ دوسه‌کلمه‌ای با این حروف بنویس و بلند بخوان.\n\nراهنما: تمرکز بر خواندنِ روان و نوشتنِ درستِ حرف، نه حفظِ قاعده.`;
+ }
+ if(/آفریدگارِ زیبایی|فضلِ خدا|معرفتِ آفریدگار|تماشاخانه|پنجره‌های شناخت/.test(T)) return `${H}\n\n■ ساده\n۱) این درس دربارهٔ چه چیزی در آفرینش صحبت می‌کند؟\n۲) یک نشانه از زیباییِ طبیعت که خودت دیده‌ای بنویس.\n■ متوسط\n۱) دو کلمهٔ تازه از متن را پیدا کن و معنی‌شان را بنویس.\n۲) یک جمله با یکی از این کلمه‌ها بساز.\n■ چالشی\n۱) یک بندِ کوتاه (۳–۴ جمله) دربارهٔ یکی از نشانه‌های آفرینش در ایرانشهر بنویس (مثلاً غروبِ خورشید یا نخلستان).\n\nراهنما: روی درکِ مطلب و واژه‌سازی تمرکز کن.`;
+ if(/کوچِ پرستوها|زندگیِ ما و آب|رنگین‌کمان/.test(T)) return `${H}\n\n■ ساده\n۱) موضوعِ اصلیِ این درس چیست؟\n۲) یک جملهٔ زیبا از متن پیدا کن.\n■ متوسط\n۱) داستانِ درس را در دو جمله خلاصه کن.\n۲) دو کلمهٔ هم‌معنی یا هم‌خانواده از متن بیاب.\n■ چالشی\n۱) پایانِ دیگری برای این متن بنویس.\n\nراهنما: خلاصه‌نویسی باید فقط نکاتِ اصلی را داشته باشد.`;
+ if(/رازِ نشانه‌ها|هوشیاری|رازی و ساختِ بیمارستان|داستانِ من و شما/.test(T)) return `${H}\n\n■ ساده\n۱) شخصیتِ اصلیِ داستان چه کسی است؟\n۲) او چه مشکلی داشت؟\n■ متوسط\n۱) او چطور مشکل را حل کرد؟\n۲) اگر جای او بودی چه‌کار می‌کردی؟\n■ چالشی\n۱) یک داستانِ کوتاهِ مشابه با موضوعِ هوشیاری بنویس.\n\nراهنما: بر تفکرِ نقادانه و حل‌مسئله تاکید کن.`;
+ if(/ارزشِ علم|رهایی از قفس|بازرگان و پسران|چنار و کدوبُن/.test(T)) return `${H}\n\n■ ساده\n۱) پیامِ اصلیِ این درس چیست؟\n۲) یک ضرب‌المثلِ مرتبط با این پیام می‌شناسی؟\n■ متوسط\n۱) این پیام را در زندگیِ روزمره‌ات چطور به‌کار می‌بری؟\n۲) دو کلمهٔ سخت از متن را پیدا و معنی کن.\n■ چالشی\n۱) یک نامهٔ کوتاه به نویسنده بنویس و نظرت را دربارهٔ داستان بگو.\n\nراهنما: پیوند دادنِ درس به تجربهٔ شخصیِ دانش‌آموز.`;
+ if(/آرشِ کمان‌گیر|ایرانِ زیبا|ایرانِ عزیز|ای وطن|سرودِ ملی|ایران‌آباد/.test(T)) return `${H}\n\n■ ساده\n۱) این متن دربارهٔ کدام بخشِ ایران صحبت می‌کند؟\n۲) یک ویژگیِ زیبایِ ایران را که می‌شناسی بنویس.\n■ متوسط\n۱) دو صفت که برایِ توصیفِ ایران در متن به‌کار رفته پیدا کن.\n■ چالشی\n۱) یک بندِ کوتاه دربارهٔ زیبایی‌های ایرانشهر و بلوچستان بنویس.\n\nراهنما: می‌توانی به طبیعت، مردم یا فرهنگِ منطقه‌ات اشاره کنی.`;
+ if(/مهمانِ شهرِ ما|دریاقلی|هفت‌خانِ رستم|شهدا خورشیدند|عطار و جلال‌الدینِ محمد/.test(T)) return `${H}\n\n■ ساده\n۱) شخصیتِ اصلیِ این متن کیست؟\n۲) او چه کارِ مهمی انجام داد؟\n■ متوسط\n۱) چرا این شخصیت برایِ ما مهم است؟\n۲) دو ویژگیِ اخلاقیِ او را بنویس.\n■ چالشی\n۱) دربارهٔ یک قهرمانِ محلیِ منطقه‌ات (واقعی) یک بندِ کوتاه بنویس.\n\nراهنما: می‌توان از قهرمانانِ ملی یا محلی الگو گرفت.`;
+ if(/باغچه‌ی اطفال|فرمانده‌ی دل‌ها|اتفاقِ ساده|نام‌آوران|نامِ نیکو|نقشِ خردمندان|رنج‌هایی کشیده‌ام/.test(T)) return `${H}\n\n■ ساده\n۱) این درس دربارهٔ کدام شخصیتِ نام‌آور است؟\n۲) او در چه زمینه‌ای معروف شد؟\n■ متوسط\n۱) دو کارِ مهمِ او را نام ببر.\n۲) چه چیزی از او آموختی؟\n■ چالشی\n۱) دربارهٔ فردی که در خانواده یا منطقه‌ات به او افتخار می‌کنی بنویس.\n\nراهنما: احترام به الگوهایِ واقعی و محلی.`;
+ if(/لطفِ حق|ادب از که آموختی|شیر و موش|روزی که باران می‌بارید|شجاعت|کاجستان|دوستی و مشاوره|رازِ زندگی/.test(T)) return `${H}\n\n■ ساده\n۱) این داستان چه درسِ اخلاقی‌ای دارد؟\n۲) شخصیتِ داستان چطور رفتار کرد؟\n■ متوسط\n۱) این درسِ اخلاقی را در یک جملهٔ خودت بازنویسی کن.\n۲) یک نمونه از زندگیِ خودت که این درس در آن صادق است بنویس.\n■ چالشی\n۱) پایانِ متفاوتی برای داستان بنویس که همان پیام را برساند.\n\nراهنما: تمرکز بر ارزش‌های اخلاقی و تجربهٔ شخصی.`;
+ if(/پرسشگری|مدرسه‌ی هوشمند|وقتی بوعلی کودک بود|کار و تلاش|میوه‌ی هنر|آدابِ مطالعه|ستاره‌ی روشن/.test(T)) return `${H}\n\n■ ساده\n۱) این درس چه توصیه‌ای برایِ یادگیریِ بهتر دارد؟\n۲) تو معمولاً چطور درس می‌خوانی؟\n■ متوسط\n۱) دو عادتِ خوبِ مطالعه از متن پیدا کن.\n■ چالشی\n۱) یک برنامهٔ هفتگیِ ساده برایِ مطالعه بنویس.\n\nراهنما: پیوند دادنِ محتوا به عادت‌های یادگیریِ خودِ دانش‌آموز.`;
+ if(/محله‌ی ما|کتاب‌خانه‌ی کلاسِ ما|مسجدِ محله‌ی ما|زنگِ ورزش/.test(T)) return `${H}\n\n■ ساده\n۱) در محلهٔ تو چه مکان‌های مهمی هست؟\n۲) کدام‌یک را بیشتر دوست داری؟ چرا؟\n■ متوسط\n۱) یک بندِ کوتاه دربارهٔ محلهٔ خودت در ایرانشهر بنویس.\n■ چالشی\n۱) یک راهنمای کوتاه برای معرفیِ محله‌ات به یک دوستِ تازه بنویس.\n\nراهنما: نوشتن دربارهٔ محیطِ آشنا، انگیزهٔ نگارش را بالا می‌برد.`;
+ if(/آسمانِ آبی|آوازِ گنجشک|خرسِ کوچولو|مدرسه‌ی خرگوش‌ها/.test(T)) return `${H}\n\n■ ساده\n۱) این متن دربارهٔ کدام موضوعِ بهداشتی یا طبیعت صحبت می‌کند؟\n۲) یک نکتهٔ بهداشتی از متن بنویس.\n■ متوسط\n۱) یک قانونِ ساده برایِ تمیز نگه‌داشتنِ کلاس پیشنهاد بده.\n■ چالشی\n۱) یک شعر یا جملهٔ کوتاهِ آهنگین دربارهٔ طبیعتِ پاک بساز.\n\nراهنما: هم‌راستا با بهداشتِ فردی و محیطی.`;
+ if(/بلدرچین و برزگر|فداکاران|کارِ نیک|چوپانِ درست‌کار|کوشا و نوشا|دوستانِ ما/.test(T)) return `${H}\n\n■ ساده\n۱) شخصیت‌های این داستان چه کسانی‌اند؟\n۲) چه کارِ خوبی انجام دادند؟\n■ متوسط\n۱) این کارِ خوب چه نتیجه‌ای داشت؟\n■ چالشی\n۱) یک داستانِ کوتاه دربارهٔ کمک‌کردن به دیگران بنویس.\n\nراهنما: تشویقِ همکاری و درستکاری.`;
+ if(/از همه مهربان‌تر|زیارت|هنرمند|فردوسی|درسِ آزاد|پرواز قطره|مثلِ دانشمندان|پیراهنِ بهشتی|بویِ نرگس|یارِ مهربان|نویسنده‌ی بزرگ|نوروز|دریا|اگر جنگل نباشد|چشم‌های آسمان|پرچم/.test(T)) return `${H}\n\n■ ساده\n۱) موضوعِ اصلیِ این متن چیست؟\n۲) یک جملهٔ خوشِ متن را پیدا کن.\n■ متوسط\n۱) این متن را در سه جمله برایِ یک دوست تعریف کن.\n۲) دو کلمهٔ تازه پیدا کن و معنی‌شان را بنویس.\n■ چالشی\n۱) دربارهٔ موضوعِ این درس، یک بندِ کوتاه با تجربهٔ خودت بنویس.\n\nراهنما: خواندنِ روان + درکِ مطلب + نگارشِ کوتاه.`;
+ return `${H}\n\n■ ساده\n۱) موضوعِ اصلیِ این درس را در یک جمله بگو.\n۲) یک کلمهٔ تازه از این درس پیدا کن.\n■ متوسط\n۱) این درس را در دو تا سه جمله خلاصه کن.\n۲) یک سوال دربارهٔ متن بنویس.\n■ چالشی\n۱) یک بندِ کوتاه با موضوعِ این درس بنویس.\n\nراهنما: خواندنِ روان، درکِ مطلب و نگارشِ کوتاه را با هم تمرین کن.`;
+}
+function planSample(s,T,g){return `طرحِ درس — ${T} (${s}، پایهٔ ${g}) · ۴۵ دقیقه\n\n• هدفِ رفتاری: دانش‌آموز بتواند «${T}» را با مثال توضیح دهد.\n• پیش‌نیاز: دانسته‌های جلسهٔ قبل.\n• مقدمه (۵د): با یک پرسشِ کنجکاوی‌برانگیز شروع کن.\n• فعالیتِ اصلی (۲۰د): کارِ عملی/گروهی با وسایلِ ساده؛ ثبت در جدول.\n• جمع‌بندی (۱۰د): نتیجه‌گیریِ مشترک روی تخته.\n• ارزیابی (۵د): دو سوالِ کوتاه + تکلیفِ خانه.`;}
+function storySample(T){return `داستانِ کوتاه — ${T}\n\nآفتاب که بالا آمد، «سارا» با کنجکاوی سراغِ «${T}» رفت. اول کمی گیج بود، اما وقتی خودش امتحان کرد و با دوستش حرف زد، کم‌کم روشن شد. آن روز فهمید فهمیدن با انجام‌دادن شروع می‌شود.\n\nپرسش‌ها:\n۱) سارا چطور «${T}» را فهمید؟\n۲) پیامِ داستان چیست؟`;}
+
+// ---- بانکِ پرامت ----
+function getBank(){try{return JSON.parse(localStorage.getItem('pp_bank')||'[]')}catch(e){return[]}}
+function setBank(b){try{localStorage.setItem('pp_bank',JSON.stringify(b))}catch(e){}}
+function saveToBank(){
+  const p=document.getElementById('prompt').textContent.trim();
+  if(!p||p.startsWith('دکمهٔ')){toast('اول یک پرامت بساز');return;}
+  const label=`${val('subject')} · پایهٔ ${val('grade')} · ${document.getElementById('topic').value||'—'}`;
+  const b=getBank(); b.unshift({label,prompt:p}); setBank(b); renderBank(); toast('در بانک ذخیره شد ✓');
+}
+function renderBank(){
+  const b=getBank(), list=document.getElementById('banklist');
+  document.getElementById('bankCount').textContent=toFa(b.length);
+  document.getElementById('bankEmpty').style.display=b.length?'none':'block';
+  list.innerHTML='';
+  b.forEach((it,i)=>{
+    const row=document.createElement('div');row.className='bankitem';
+    const sp=document.createElement('span');sp.textContent=it.label;
+    const acts=document.createElement('div');acts.className='acts';
+    const bl=document.createElement('button');bl.className='ghost';bl.textContent='بارگذاری';
+    bl.onclick=()=>{document.getElementById('prompt').textContent=it.prompt;toast('در بخشِ پرامت بارگذاری شد');document.getElementById('promptCard').scrollIntoView({behavior:'smooth',block:'start'});};
+    const bd=document.createElement('button');bd.className='del';bd.textContent='حذف';
+    bd.onclick=()=>{const bb=getBank();bb.splice(i,1);setBank(bb);renderBank();};
+    acts.appendChild(bl);acts.appendChild(bd);row.appendChild(sp);row.appendChild(acts);list.appendChild(row);
+  });
+}
+function clearBank(){if(getBank().length&&confirm('کلِ بانک پاک شود؟')){setBank([]);renderBank();toast('بانک خالی شد');}}
+function exportBank(){
+  const b=getBank(); if(!b.length){toast('بانک خالی است');return;}
+  const txt=b.map((it,i)=>`— ${i+1}) ${it.label}\n${it.prompt}\n`).join('\n');
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='بانک-پرامت-من.txt';
+  document.body.appendChild(a);a.click();a.remove();toast('دانلود شد ✓');
+}
+function toFa(n){return String(n).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);}
+
+function renderFollowups(){
+  const box=document.getElementById('followups');box.innerHTML='';
+  FOLLOWUPS.forEach(([lbl,txt])=>{const b=document.createElement('button');b.textContent=lbl;
+    b.onclick=()=>{copyText(txt);};box.appendChild(b);});
+}
+
+function val(id){return document.getElementById(id).value}
+function fillExample(){
+  const ex=[["پنجم","علوم","plan","تغییرات مواد"],["پنجم","ریاضی","tri","عددهای اعشاری"],
+            ["سوم","ریاضی","tri","ضرب و تقسیم"],["دوم","فارسی","story","جمله‌سازی"],
+            ["چهارم","علوم","worksheet","گیاهان"],["پنجم","علوم","simplify","دستگاه‌های بدن"]];
+  const p=ex[Math.floor(Math.random()*ex.length)];
+  document.getElementById('grade').value=p[0];document.getElementById('subject').value=p[1];
+  document.getElementById('task').value=p[2];document.getElementById('topic').value=p[3];
+  document.getElementById('local').checked=true;suggestTopics();toggleOpts();buildClick();
+}
+function copyEl(id){copyText(document.getElementById(id).textContent);}
+function copyText(t){if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>toast('کپی شد ✓')).catch(()=>legacy(t));}else legacy(t);}
+function legacy(t){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('کپی شد ✓')}catch(e){}a.remove();}
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),1300);}
+function save(){try{const o={};['grade','subject','task','topic','count','tone'].forEach(id=>o[id]=val(id));o.local=document.getElementById('local').checked;o.fluent=document.getElementById('fluent').checked;localStorage.setItem('pp',JSON.stringify(o));}catch(e){}}
+function load(){try{const o=JSON.parse(localStorage.getItem('pp')||'{}');['grade','subject','task','topic','count','tone'].forEach(id=>{if(o[id]!=null&&document.getElementById(id))document.getElementById(id).value=o[id];});if(o.local!=null)document.getElementById('local').checked=o.local;if(o.fluent!=null)document.getElementById('fluent').checked=o.fluent;}catch(e){}}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')buildClick();});
+load();suggestTopics();toggleOpts();renderFollowups();renderBank();initHowto();
+
+// ---- نصب به‌عنوانِ اپ (PWA) ----
+// توجه: سرویس‌ورکر فقط روی https یا localhost کار می‌کند، نه با بازکردنِ مستقیمِ فایل (file://).
+// اگر این صفحه را یک‌بار روی یک آدرسِ وب باز کنی، از آن پس امکانِ «نصب» و کارِ کاملاً آفلاین فراهم می‌شود.
+if('serviceWorker' in navigator && location.protocol!=='file:'){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault(); deferredInstall=e;
+  const b=document.getElementById('installBtn'); if(b) b.style.display='inline-block';
+});
+function installApp(){
+  if(!deferredInstall) return;
+  deferredInstall.prompt();
+  deferredInstall.userChoice.finally(()=>{deferredInstall=null;const b=document.getElementById('installBtn');if(b)b.style.display='none';});
+}
+</script>
+</body>
+</html>
